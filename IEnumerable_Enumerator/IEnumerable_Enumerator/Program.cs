@@ -21,11 +21,21 @@ namespace IEnumerable_Enumerator
 
             MyCollection<int> myCollection = new MyCollection<int>();
             myCollection.Add(7);
+            myCollection.Add(8);
+            myCollection.Add(9);
             foreach(int v in myCollection)
             {
 
+                Console.WriteLine("VALUE FROM MYCOLLECTION " + v);
             }
 
+
+
+            var enumerator = myCollection.GetEnumerator();
+            while (enumerator.MoveNext()) 
+            {
+                Console.WriteLine(enumerator.Current);
+            }
 
         }
     }
