@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IEnumerable_Enumerator
 {
-    public class MyCollection<T> : IEnumerable<T>
+    public class MyCollection<T> : IEnumerable<T>,IReadOnlyList<T>
     {
 
         List<T> _list = new List<T>();
@@ -17,52 +17,75 @@ namespace IEnumerable_Enumerator
 
         }
 
-
-        public IEnumerator<T> GetEnumerator() => GetEnumerator();
-
-
-
-        IEnumerator IEnumerable.GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
-        }
-    }
+           return new MyCollectionEnumerator<T>(this);
+        } // generic
 
 
-
-
-
-    class MyCollectionEnumerator<T> : IEnumerator<T>
-    {
-        public T Current => Current;
-
-        MyCollection<T> _collection = new MyCollection<T>;
-
-        object IEnumerator.Current => Current;
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();// non generic method
         
-        public MyCollectionEnumerator(MyCollection<T> _collection)
+
+       
+
+
+
+
+        public int Count { get { return _list.Count; } }
+
+
+        public T this[int index] {  get { return _list[index]; } }
+
+
+
+
+        class MyCollectionEnumerator<T> : IEnumerator<T>
         {
-            this._collection = _collection;
+            public T Current { get; set; }
+
+            int index = -1;
+
+
+
+            MyCollection<T> _collection = new MyCollection<T>();
+
+
+            object IEnumerator.Current => Current;
+
+
+
+
+            public MyCollectionEnumerator(MyCollection<> _collection)
+            {
+                this._collection = _collection;
+            }
+
+            public void Dispose()
+            {
+
+            }
+
+            public bool MoveNext()
+            {
+                if (++index >= _collection.Count)
+                {
+                    return false;
+                }
+                Current = collection[index];
+                return true;
+            }
+
+
+
+            public void Reset()
+            {
+
+            }
         }
 
 
-        public void Dispose()
-        {
-            
-        }
-
-        public bool MoveNext()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-           
-        }
-    }
 
 
 
 
-}
+    } }
