@@ -3,7 +3,7 @@
 
 namespace Practices
 {
-    class Guess
+    class Controlflow_Guess
     {
 
 

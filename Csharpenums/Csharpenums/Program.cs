@@ -64,13 +64,14 @@ namespace Csharpnums
             }
 
 
-            // Enum conversion  for Integers
+          //  Enum conversion  for Integers
 
-            //int[] val = (int[])Enum.GetValues(typeof(Days));
-            //foreach(int values in val)
-            //{
-            //    Console.WriteLine(values);
-            //}
+
+           int[] val = (int[])Enum.GetValues(typeof(Days));
+            foreach (int values in val)
+                {
+                    Console.WriteLine(values);
+                }
 
 
             // Enum conversion for string
@@ -81,7 +82,7 @@ namespace Csharpnums
             //    Console.WriteLine(member);
 
             //}
-                
+
 
 
 
@@ -118,7 +119,7 @@ namespace Csharpnums
             //Days brth = Days.Saturdays;
             //Console.WriteLine(brth);
 
-        //    Console.WriteLine(Days.Friday);// more readable
+            //    Console.WriteLine(Days.Friday);// more readable
 
             //Console.BackgroundColor = ConsoleColor.Yellow;
             //Console.ForegroundColor = ConsoleColor.Red;
