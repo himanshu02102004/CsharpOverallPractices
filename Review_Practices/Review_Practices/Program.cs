@@ -19,7 +19,11 @@ namespace Review_Practices
 
             // Array_List_Ques1.Ques1();
             //  Array_List_Ques2.Ques2();
-            Array_List_Ques3.Ques3();
+           // Array_List_Ques3.Ques3();
+
+         //   Array_List_Ques_5.Ques5();
+
+            Array_List_Ques_4.Ques4();
         }
 
     }
