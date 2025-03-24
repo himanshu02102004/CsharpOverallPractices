@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task_Paraller_Library", "Task_Paraller_Library\Task_Paraller_Library.csproj", "{62EF5917-81A4-4863-88C2-5E965558940E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62EF5917-81A4-4863-88C2-5E965558940E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62EF5917-81A4-4863-88C2-5E965558940E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62EF5917-81A4-4863-88C2-5E965558940E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62EF5917-81A4-4863-88C2-5E965558940E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F82BB8B-13A1-43AE-8B95-7C5098AB0186}
+	EndGlobalSection
+EndGlobal

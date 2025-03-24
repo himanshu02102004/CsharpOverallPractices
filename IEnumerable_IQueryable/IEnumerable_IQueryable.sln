@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IEnumerable_Enumerator", "IEnumerable_Enumerator\IEnumerable_Enumerator.csproj", "{564868A4-D9EB-487C-9136-9C269BBE4A1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IEnumerable_IQueryable", "IEnumerable_IQueryable\IEnumerable_IQueryable.csproj", "{1F226369-0F90-48E4-B7A3-AE90C87633D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{564868A4-D9EB-487C-9136-9C269BBE4A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{564868A4-D9EB-487C-9136-9C269BBE4A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{564868A4-D9EB-487C-9136-9C269BBE4A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{564868A4-D9EB-487C-9136-9C269BBE4A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F226369-0F90-48E4-B7A3-AE90C87633D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F226369-0F90-48E4-B7A3-AE90C87633D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F226369-0F90-48E4-B7A3-AE90C87633D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F226369-0F90-48E4-B7A3-AE90C87633D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8A824FEB-D17D-400A-B7AD-C50FD6EF3E1D}
+		SolutionGuid = {12089F9B-A195-490B-A6C0-5010EDD7CDFA}
 	EndGlobalSection
 EndGlobal
