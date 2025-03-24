@@ -45,6 +45,21 @@ namespace Seriaiization_Demo
 
 
 
+
+
+            ///Uing xml
+            ///
+            string xml = "<Student><Name>John</Name><Age>22</Age></Student>";
+            StringReader reader = new StringReader(xml);  // StringReader is a class that reads a string as if it were a stream (like reading from a file).
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Student)); ///  XmlSerializer is a class that converts XML data to C# objects.
+            Student student = (Student)serializer.Deserialize(reader);
+
+            Console.WriteLine($"Name: {student.Name}, Age: {student.Age}");
+
+
+            /// typeof(Student) tells the serializer that the XML represents a Student object.
+
         }
     }
 }

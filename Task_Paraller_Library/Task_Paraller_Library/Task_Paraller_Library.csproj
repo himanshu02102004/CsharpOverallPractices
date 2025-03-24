@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cancellation_token.cs" />
+    <Compile Include="Parallel_code.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ttask_code.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -14,7 +14,7 @@ namespace Lambaexpression
 
 
 
-            //example for expression
+            //example for   expression
             //myDelegate obj = (a) => a * a;
 
             //myDelegate obj1 = (a) => a * a * a;
@@ -26,7 +26,7 @@ namespace Lambaexpression
 
 
 
-            /// example for statement
+            /// example for  lamba statement
 
             //myDelegate obj = (a) =>
             //{

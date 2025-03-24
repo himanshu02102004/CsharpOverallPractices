@@ -10,22 +10,15 @@ namespace Task_Paraller_Library
     {
         static void Main(string[] args)
         {
-            //Thread o1=new Thread(RunMillioIteration());
-            //o1.Start();
 
-            Parallel.For(0,1000000, x=> RunMillionIteration());
-            Console.Read();
+            //   ttask_code.Done();
+
+            Parallel_code.overall();
+           
         }
 
 
 
-        private static void RunMillionIteration()
-        {
-            string x = " ";
-            for(int iIndex=0; iIndex< 1000000; iIndex++)
-            {
-                x = x + " s"; 
-            }
-        }
+      
     }
 }
