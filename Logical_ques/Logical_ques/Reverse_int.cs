@@ -13,7 +13,7 @@ namespace Logical_ques
 
         public static void Ques2()
         {
-            int num = 12345;
+            int num = 5678;
             int rev = 0;
             while (num > 0)
             {

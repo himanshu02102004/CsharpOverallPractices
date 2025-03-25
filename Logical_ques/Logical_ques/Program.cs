@@ -5,7 +5,9 @@ namespace Logical_ques
     {
         static void Main(string[] args)
         {
-            Second_Larg_ques_1.Ques1();
+            //Second_Larg_ques_1.Ques1();
+
+            Reverse_int.Ques2();
             Console.ReadLine();
         }
     }
