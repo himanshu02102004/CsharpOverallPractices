@@ -7,7 +7,9 @@ namespace Logical_ques
         {
             //Second_Larg_ques_1.Ques1();
 
-            Reverse_int.Ques2();
+            // Reverse_int.Ques2();
+
+            Even_odd_Fuzzbuzz.Ques3();
             Console.ReadLine();
         }
     }
