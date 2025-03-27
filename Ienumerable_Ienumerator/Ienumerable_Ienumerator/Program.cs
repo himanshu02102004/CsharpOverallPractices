@@ -69,9 +69,11 @@ namespace Ienumerable_Ienumerator
             foreach (int i in o)
             {
                 Console.WriteLine(i);
+
+                Console.WriteLine("---------------");
                 if(i > 2004)
                 {
-                    Interate2004to2006(o);
+                    Interate2004to2006(o);  
                 }
             }
         }
@@ -111,7 +113,7 @@ namespace Ienumerable_Ienumerator
 
 
 
-        //static void Interate2001to2004(IEnumerator<int> o)
+        //stati c void Interate2001to2004(IEnumerator<int> o)
         //{
         //    // intergrate from 2001 to 2004
 
