@@ -85,6 +85,7 @@ namespace projects44
 
             else
             {
+
                 int demerit = (carspeed - speedLimit) / 5;
                 Console.WriteLine($"demeritpoint : {demerit}");
 
