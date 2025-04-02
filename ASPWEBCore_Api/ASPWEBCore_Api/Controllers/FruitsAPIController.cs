@@ -17,14 +17,14 @@ namespace ASPWEBCore_Api.Controllers
               "kella"
         };
 
-         [HttpGet]
-        public List<string > GetFruits()
+        [HttpGet]
+        public List<string> GetFruits()
         {
             return fruits;
         }
 
-        [HttpGet]
-        public string GetFruits(int id)
+        [HttpGet("{id}")]
+        public string GetFruitsByIndex(int id)
         {
             return fruits.ElementAt(id);
         }
