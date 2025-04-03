@@ -11,9 +11,12 @@ namespace ESCOREBASICS.Models
     {
 
 
-        public int ManagerId { get; set; }
+        public int ManagerId { get; set; }        /// Primary key
         public string ManagerFirstName { get; set; }
         public string ManagerLastName { get; set; }
 
+        public ICollection<Employee> Employees { get; set; }  //collection navigation property to represent the employeee  managed by manager
+      
+        
     }
 }

@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+using ESCOREBASICS.Models;
+
+//Insert manager details
+
+var manager = new Manager();
+manager.ManagerFirstName = "prajwal";
+manager.ManagerLastName = "mishra";

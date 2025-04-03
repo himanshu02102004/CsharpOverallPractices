@@ -3,6 +3,7 @@ using ESCOREBASICS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESCOREBASICS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250403051754_OneToOneRelationship")]
+    partial class OneToOneRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,12 +43,7 @@ namespace ESCOREBASICS.Migrations
                     b.Property<long>("EmpSalary")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("int");
-
                     b.HasKey("EmployeeId");
-
-                    b.HasIndex("ManagerId");
 
                     b.ToTable("Employees");
                 });
@@ -81,21 +79,6 @@ namespace ESCOREBASICS.Migrations
                     b.ToTable("EmployeeDetails");
                 });
 
-            modelBuilder.Entity("ESCOREBASICS.Models.EmployeeProject", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeeId", "ProjectId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("EmployeeProjects");
-                });
-
             modelBuilder.Entity("ESCOREBASICS.Models.Manager", b =>
                 {
                     b.Property<int>("ManagerId")
@@ -117,30 +100,6 @@ namespace ESCOREBASICS.Migrations
                     b.ToTable("Managers");
                 });
 
-            modelBuilder.Entity("ESCOREBASICS.Models.Project", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProjectId");
-
-                    b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("ESCOREBASICS.Models.Employee", b =>
-                {
-                    b.HasOne("ESCOREBASICS.Models.Manager", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("ManagerId");
-                });
-
             modelBuilder.Entity("ESCOREBASICS.Models.EmployeeDetails", b =>
                 {
                     b.HasOne("ESCOREBASICS.Models.Employee", "Employee")
@@ -152,41 +111,10 @@ namespace ESCOREBASICS.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("ESCOREBASICS.Models.EmployeeProject", b =>
-                {
-                    b.HasOne("ESCOREBASICS.Models.Employee", "Employee")
-                        .WithMany("EmployeeProjects")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ESCOREBASICS.Models.Project", "Project")
-                        .WithMany("EmployeeProjects")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Project");
-                });
-
             modelBuilder.Entity("ESCOREBASICS.Models.Employee", b =>
                 {
                     b.Navigation("EmployeeDetails")
                         .IsRequired();
-
-                    b.Navigation("EmployeeProjects");
-                });
-
-            modelBuilder.Entity("ESCOREBASICS.Models.Manager", b =>
-                {
-                    b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("ESCOREBASICS.Models.Project", b =>
-                {
-                    b.Navigation("EmployeeProjects");
                 });
 #pragma warning restore 612, 618
         }

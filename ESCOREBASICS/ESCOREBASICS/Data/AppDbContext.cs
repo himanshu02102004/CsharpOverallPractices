@@ -19,6 +19,13 @@ namespace ESCOREBASICS.Data
         public DbSet <Employee>  Employees{ get; set; }
         public DbSet<Manager> Managers { get; set; }
 
+        public DbSet<EmployeeDetails> EmployeeDetails { get; set; }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<EmployeeProject> EmployeeProjects { get; set; }
+
+
+
 
         public string  ConnectionString { get; }
 
@@ -30,6 +37,17 @@ namespace ESCOREBASICS.Data
 
         }
 
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Employee>()
+        //        .HasOne(e => e.EmployeeDetails)
+        //        .WithOne(d => d.Employee)
+        //        .HasForeignKey<EmployeeDetails>(d => d.EmployeeId);
+        //}
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
@@ -39,6 +57,27 @@ namespace ESCOREBASICS.Data
 
 
         }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmployeeProject>()
+                .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
+
+
+
+            modelBuilder.Entity<EmployeeProject>()
+                .HasOne(ep => ep.Employee)
+                .WithMany(e => e.EmployeeProjects)
+                .HasForeignKey(ep => ep.EmployeeId);
+
+
+            modelBuilder.Entity<EmployeeProject>()
+                .HasOne(ep => ep.Project)
+                .WithMany(e => e.EmployeeProjects)
+                .HasForeignKey(ep => ep.ProjectId);
+        }
+
 
 
     }
