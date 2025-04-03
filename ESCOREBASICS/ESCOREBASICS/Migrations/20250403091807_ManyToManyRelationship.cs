@@ -11,16 +11,23 @@ namespace ESCOREBASICS.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Employees_Managers_ManagerId",
-                table: "Employees");
+                name: "FK_EmployeeDetails_Employees_EmployeeId",
+                table: "EmployeeDetails");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ManagerId",
+            migrationBuilder.DropIndex(
+                name: "IX_EmployeeDetails_EmployeeId",
+                table: "EmployeeDetails");
+
+            migrationBuilder.DropColumn(
+                name: "EmployeeId",
+                table: "EmployeeDetails");
+
+            migrationBuilder.AddColumn<int>(
+                name: "EmployeeDetailsEmployeeIds",
                 table: "Employees",
                 type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "Projects",
@@ -60,23 +67,29 @@ namespace ESCOREBASICS.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Employees_EmployeeDetailsEmployeeIds",
+                table: "Employees",
+                column: "EmployeeDetailsEmployeeIds");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeProjects_ProjectId",
                 table: "EmployeeProjects",
                 column: "ProjectId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Employees_Managers_ManagerId",
+                name: "FK_Employees_EmployeeDetails_EmployeeDetailsEmployeeIds",
                 table: "Employees",
-                column: "ManagerId",
-                principalTable: "Managers",
-                principalColumn: "ManagerId");
+                column: "EmployeeDetailsEmployeeIds",
+                principalTable: "EmployeeDetails",
+                principalColumn: "EmployeeIds",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Employees_Managers_ManagerId",
+                name: "FK_Employees_EmployeeDetails_EmployeeDetailsEmployeeIds",
                 table: "Employees");
 
             migrationBuilder.DropTable(
@@ -85,22 +98,33 @@ namespace ESCOREBASICS.Migrations
             migrationBuilder.DropTable(
                 name: "Projects");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ManagerId",
-                table: "Employees",
+            migrationBuilder.DropIndex(
+                name: "IX_Employees_EmployeeDetailsEmployeeIds",
+                table: "Employees");
+
+            migrationBuilder.DropColumn(
+                name: "EmployeeDetailsEmployeeIds",
+                table: "Employees");
+
+            migrationBuilder.AddColumn<int>(
+                name: "EmployeeId",
+                table: "EmployeeDetails",
                 type: "int",
                 nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "int",
-                oldNullable: true);
+                defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeDetails_EmployeeId",
+                table: "EmployeeDetails",
+                column: "EmployeeId",
+                unique: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Employees_Managers_ManagerId",
-                table: "Employees",
-                column: "ManagerId",
-                principalTable: "Managers",
-                principalColumn: "ManagerId",
+                name: "FK_EmployeeDetails_Employees_EmployeeId",
+                table: "EmployeeDetails",
+                column: "EmployeeId",
+                principalTable: "Employees",
+                principalColumn: "EmployeeId",
                 onDelete: ReferentialAction.Cascade);
         }
     }

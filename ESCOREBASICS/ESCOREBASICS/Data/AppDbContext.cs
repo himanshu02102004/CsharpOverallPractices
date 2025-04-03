@@ -59,24 +59,58 @@ namespace ESCOREBASICS.Data
         }
 
 
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<EmployeeProject>()
+        //        .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
+
+
+
+        //    modelBuilder.Entity<EmployeeProject>()
+        //        .HasOne(ep => ep.Employee)
+        //        .WithMany(e => e.EmployeeProjects)
+        //        .HasForeignKey(ep => ep.EmployeeId);
+
+
+        //    modelBuilder.Entity<EmployeeProject>()
+        //        .HasOne(ep => ep.Project)
+        //        .WithMany(e => e.EmployeeProjects)
+        //        .HasForeignKey(ep => ep.ProjectId);
+        //}
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure Employee to EmployeeDetails relationship (One-to-One)
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.EmployeeDetails)
+                .WithOne(d => d.Employee)
+                .HasForeignKey<EmployeeDetails>(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade); // Optional: Ensures cascading delete
+
+
+
+
+
+
+
+
+
+            // Configure Employee to Project (Many-to-Many)
             modelBuilder.Entity<EmployeeProject>()
                 .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
-
-
 
             modelBuilder.Entity<EmployeeProject>()
                 .HasOne(ep => ep.Employee)
                 .WithMany(e => e.EmployeeProjects)
                 .HasForeignKey(ep => ep.EmployeeId);
 
-
             modelBuilder.Entity<EmployeeProject>()
                 .HasOne(ep => ep.Project)
                 .WithMany(e => e.EmployeeProjects)
                 .HasForeignKey(ep => ep.ProjectId);
         }
+
 
 
 

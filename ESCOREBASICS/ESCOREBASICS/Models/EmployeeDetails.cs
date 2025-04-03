@@ -11,7 +11,7 @@ namespace ESCOREBASICS.Models
     {
 
         [Key]
-        public int EmployeeIds { get; set; }   
+        public int EmployeeIds { get; set; }  // primary key 
         public string Email { get; set; }
 
         public string  phonenum { get; set; }
@@ -21,8 +21,8 @@ namespace ESCOREBASICS.Models
 
 
         //// one to one relatioship
-        //public int EmployeeId { get; set; } /// Foreign key
-        //public Employee Employee { get; set; }  //refrence Navigation property
-     
+        public int EmployeeId { get; set; } /// Foreign key
+        public Employee Employee { get; set; }  //refrence Navigation property
+
     }
 }

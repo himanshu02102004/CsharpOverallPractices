@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESCOREBASICS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250403065733_ManyToManyRelationship")]
+    [Migration("20250403091807_ManyToManyRelationship")]
     partial class ManyToManyRelationship
     {
         /// <inheritdoc />
@@ -43,10 +43,15 @@ namespace ESCOREBASICS.Migrations
                     b.Property<long>("EmpSalary")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ManagerId")
+                    b.Property<int>("EmployeeDetailsEmployeeIds")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ManagerId")
                         .HasColumnType("int");
 
                     b.HasKey("EmployeeId");
+
+                    b.HasIndex("EmployeeDetailsEmployeeIds");
 
                     b.HasIndex("ManagerId");
 
@@ -69,17 +74,11 @@ namespace ESCOREBASICS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("phonenum")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeIds");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
 
                     b.ToTable("EmployeeDetails");
                 });
@@ -139,20 +138,21 @@ namespace ESCOREBASICS.Migrations
 
             modelBuilder.Entity("ESCOREBASICS.Models.Employee", b =>
                 {
-                    b.HasOne("ESCOREBASICS.Models.Manager", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("ManagerId");
-                });
-
-            modelBuilder.Entity("ESCOREBASICS.Models.EmployeeDetails", b =>
-                {
-                    b.HasOne("ESCOREBASICS.Models.Employee", "Employee")
-                        .WithOne("EmployeeDetails")
-                        .HasForeignKey("ESCOREBASICS.Models.EmployeeDetails", "EmployeeId")
+                    b.HasOne("ESCOREBASICS.Models.EmployeeDetails", "EmployeeDetails")
+                        .WithMany()
+                        .HasForeignKey("EmployeeDetailsEmployeeIds")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employee");
+                    b.HasOne("ESCOREBASICS.Models.Manager", "Manager")
+                        .WithMany("Employees")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EmployeeDetails");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("ESCOREBASICS.Models.EmployeeProject", b =>
@@ -176,9 +176,6 @@ namespace ESCOREBASICS.Migrations
 
             modelBuilder.Entity("ESCOREBASICS.Models.Employee", b =>
                 {
-                    b.Navigation("EmployeeDetails")
-                        .IsRequired();
-
                     b.Navigation("EmployeeProjects");
                 });
 

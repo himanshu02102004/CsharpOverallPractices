@@ -19,19 +19,19 @@ namespace ESCOREBASICS.Models
         public long  EmpSalary{ get; set; }
 
 
-       // public ICollection<EmployeeProject> EmployeeProjects { get; set; }// collection navigation property
+        // public ICollection<EmployeeProject> EmployeeProjects { get; set; }// collection navigation property
 
 
-       
-
-
-
-       
-        
-        ///one to many relationship with manager
       
-        //public int ManagerId { get; set; }  /// foreign key property
-        //public Manager  Manager{ get; set; }   /// navigation properties to represent the manager
+
+
+
+
+
+        ///one to many relationship with manager
+
+        public int ManagerId { get; set; }  /// foreign key property
+        public Manager Manager { get; set; }   /// navigation properties to represent the manager
 
 
 
@@ -42,10 +42,10 @@ namespace ESCOREBASICS.Models
 
 
 
- /// one to one relationship with employeedetail
+        /// one to one relationship with employeedetail
         public EmployeeDetails EmployeeDetails { get; set; } // Reference navigation to dependent entity relatioanship with model
 
-
+        
 
 
 
