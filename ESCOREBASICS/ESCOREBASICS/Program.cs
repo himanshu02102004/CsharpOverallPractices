@@ -24,15 +24,15 @@ using (var context = new AppDbContext())
     /// added new data
 
 
-    var employeee = new Employee();
-    employeee.EmpFirstName = "yashssss";
-    employeee.EmpLastName = "guptssssa";
-    employeee.EmpSalary = 100;
-    employeee.ManagerId = 1;
-    context.Employees.Add(employeee);
+    //var employeee = new Employee();
+    //employeee.EmpFirstName = "yashssss";
+    //employeee.EmpLastName = "guptssssa";
+    //employeee.EmpSalary = 100;
+    //employeee.ManagerId = 1;
+    //context.Employees.Add(employeee);
 
 
-    context.SaveChanges();
+    //context.SaveChanges();
 
 
 
@@ -131,21 +131,41 @@ using (var context = new AppDbContext())
 
 
     /// explicity the one to many relationship
+    //var manager = context.Managers.ToList();
+    //foreach(var msg in manager)
+    //{
+    //    Console.WriteLine($"manager name: {msg.ManagerFirstName} manager lastname {msg.ManagerLastName}");
+    //    context.Entry(msg).Collection(e => e.Employees).Load();
+    //    if (msg.Employees.Any())
+    //    {
+    //        Console.WriteLine("employee :");
+    //        foreach(var emp in msg.Employees)
+    //        {
+    //            Console.WriteLine($" {emp.EmpFirstName} {emp.EmpLastName}");
+    //        }
+    //    }
+    
+    
+    //}
+
+
+
+    //// Lazy Laoding concept
     var manager = context.Managers.ToList();
-    foreach(var msg in manager)
+    foreach (var msg in manager)
     {
-        Console.WriteLine($"maager name: {msg.ManagerFirstName} manager lastname {msg.ManagerLastName}");
-        context.Entry(msg).Collection(e => e.Employees).Load();
+        Console.WriteLine($"manager name: {msg.ManagerFirstName} manager lastname {msg.ManagerLastName}");
+        
         if (msg.Employees.Any())
         {
             Console.WriteLine("employee :");
-            foreach(var emp in msg.Employees)
+            foreach (var emp in msg.Employees)
             {
                 Console.WriteLine($" {emp.EmpFirstName} {emp.EmpLastName}");
             }
         }
-    
-    
+
+
     }
 
 

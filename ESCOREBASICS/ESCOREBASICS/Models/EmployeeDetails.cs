@@ -22,7 +22,7 @@ namespace ESCOREBASICS.Models
 
         //// one to one relatioship
         public int EmployeeId { get; set; } /// Foreign key
-        public Employee Employee { get; set; }  //refrence Navigation property
+        public     Employee Employee { get; set; }  //refrence Navigation property
 
     }
 }

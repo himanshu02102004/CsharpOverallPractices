@@ -53,7 +53,7 @@ namespace ESCOREBASICS.Data
 
             
 
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(ConnectionString);
 
 
         }

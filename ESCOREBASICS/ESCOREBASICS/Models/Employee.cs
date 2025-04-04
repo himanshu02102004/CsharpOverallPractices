@@ -31,9 +31,9 @@ namespace ESCOREBASICS.Models
         ///one to many relationship with manager
 
         public int ManagerId { get; set; }  /// foreign key property
-        public Manager Manager { get; set; }   /// navigation properties to represent the manager
+        public virtual Manager Manager { get; set; }   /// navigation properties to represent the manager
 
-
+        // this is virtual for Lazy laoding concept
 
 
 
@@ -43,7 +43,7 @@ namespace ESCOREBASICS.Models
 
 
         /// one to one relationship with employeedetail
-        public EmployeeDetails EmployeeDetails { get; set; } // Reference navigation to dependent entity relatioanship with model
+      public  virtual EmployeeDetails EmployeeDetails { get; set; } // Reference navigation to dependent entity relatioanship with model
 
         
 
