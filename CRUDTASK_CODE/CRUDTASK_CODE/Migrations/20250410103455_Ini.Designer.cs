@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CRUDTASK_CODE.Migrations.Product
+namespace CRUDTASK_CODE.Migrations
 {
-    [DbContext(typeof(ApiContext))]
-    [Migration("20250405182803_InitialCreates")]
-    partial class InitialCreates
+    [DbContext(typeof(UserContrext))]
+    [Migration("20250410103455_Ini")]
+    partial class Ini
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,18 +27,18 @@ namespace CRUDTASK_CODE.Migrations.Product
 
             modelBuilder.Entity("CRUDTASK_CODE.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("CRUDTASK_CODE.Models.Order", b =>
@@ -49,15 +49,23 @@ namespace CRUDTASK_CODE.Migrations.Product
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("userID")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("userID");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("CRUDTASK_CODE.Models.OrderItem", b =>
@@ -83,7 +91,7 @@ namespace CRUDTASK_CODE.Migrations.Product
 
                     b.HasIndex("PropId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("CRUDTASK_CODE.Models.Product", b =>
@@ -107,7 +115,35 @@ namespace CRUDTASK_CODE.Migrations.Product
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("CRUDTASK_CODE.Models.Users", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("ContactNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CRUDTASK_CODE.Models.Order", b =>
+                {
+                    b.HasOne("CRUDTASK_CODE.Models.Users", "user")
+                        .WithMany("Orders")
+                        .HasForeignKey("userID");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("CRUDTASK_CODE.Models.OrderItem", b =>
@@ -148,6 +184,11 @@ namespace CRUDTASK_CODE.Migrations.Product
             modelBuilder.Entity("CRUDTASK_CODE.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("CRUDTASK_CODE.Models.Users", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

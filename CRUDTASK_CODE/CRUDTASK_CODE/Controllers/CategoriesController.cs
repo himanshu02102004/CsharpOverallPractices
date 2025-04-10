@@ -9,9 +9,9 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ProductContext productContext;
+        private readonly ApiContext productContext;
 
-        public CategoriesController(ProductContext productContext)
+        public CategoriesController(ApiContext productContext)
         {
             this.productContext = productContext;
         }

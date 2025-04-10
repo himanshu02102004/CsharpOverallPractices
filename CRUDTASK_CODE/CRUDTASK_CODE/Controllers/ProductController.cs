@@ -11,9 +11,9 @@ namespace CRUDTASK_CODE.Controllers
 
 
     {
-        private readonly ProductContext productContext;
+        private readonly ApiContext productContext;
 
-        public ProductController(ProductContext productContext)
+        public ProductController(ApiContext productContext)
         {
 
             this.productContext = productContext;
@@ -46,6 +46,12 @@ namespace CRUDTASK_CODE.Controllers
             return productContext.Products.Where(x => x.PropId == id).FirstOrDefault();
         }
 
+
+        [HttpGet("getProduct")]
+        public List<Product> getin()
+        {
+            return productContext.Products.ToList();
+        } 
 
         [HttpPost]
         [Route("Addthisproduct")]

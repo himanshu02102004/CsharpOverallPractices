@@ -8,7 +8,7 @@ namespace CRUDTASK_CODE.Models
         public int OrderId { get; set; }  // Primary key
 
         public string CustomerName { get; set; }
-        public string ID { get; set; } // FK to Users (optional but clear)
+       
 
         public DateTime OrderDate { get; set; } 
 

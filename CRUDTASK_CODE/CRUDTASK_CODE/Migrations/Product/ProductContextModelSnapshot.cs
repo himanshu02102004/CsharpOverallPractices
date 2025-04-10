@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRUDTASK_CODE.Migrations.Product
 {
-    [DbContext(typeof(ProductContext))]
+    [DbContext(typeof(ApiContext))]
     partial class ProductContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

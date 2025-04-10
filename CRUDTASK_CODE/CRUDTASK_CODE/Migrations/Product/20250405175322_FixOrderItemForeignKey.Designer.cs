@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRUDTASK_CODE.Migrations.Product
 {
-    [DbContext(typeof(ProductContext))]
+    [DbContext(typeof(ApiContext))]
     [Migration("20250405175322_FixOrderItemForeignKey")]
     partial class FixOrderItemForeignKey
     {

@@ -2,10 +2,10 @@
 
 namespace CRUDTASK_CODE.Models
 {
-    public class ProductContext:DbContext
+    public class ApiContext:DbContext
     {   
 
-        public ProductContext(DbContextOptions<ProductContext> options) : base(options)
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options)
         {
         }
 

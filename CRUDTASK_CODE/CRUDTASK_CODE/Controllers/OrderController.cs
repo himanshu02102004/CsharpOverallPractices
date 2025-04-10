@@ -9,8 +9,8 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly ProductContext productContext;
-        public OrderController(ProductContext productContext)
+        private readonly ApiContext productContext;
+        public OrderController(ApiContext productContext)
         {
             this.productContext = productContext;
         }
