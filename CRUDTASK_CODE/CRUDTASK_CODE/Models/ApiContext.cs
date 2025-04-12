@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDTASK_CODE.Models
 {
     public class ApiContext:DbContext
-    {   
-
+    {
+        public readonly ApiContext apiContext;
         public ApiContext(DbContextOptions<ApiContext> options) : base(options)
         {
         }

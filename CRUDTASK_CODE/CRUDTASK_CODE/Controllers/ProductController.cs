@@ -1,6 +1,7 @@
 ﻿using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -47,9 +48,14 @@ namespace CRUDTASK_CODE.Controllers
         }
 
 
-        [HttpGet("getProduct")]
-        public List<Product> getin()
+        [HttpGet("getProducall by filter")]
+        public List<Product> getin( int page=1,int size=10)
         {
+            var count = productContext.Products.Count();
+            var filter = (int)Math.Ceiling((double)count / size);
+
+            var list = productContext.Products.Skip((page - 1) * size).Take(size).ToList();
+
             return productContext.Products.ToList();
         } 
 

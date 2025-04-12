@@ -1,6 +1,11 @@
 ﻿using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -11,18 +16,28 @@ namespace CRUDTASK_CODE.Controllers
 
         private readonly UserContrext usercontrext;
 
-        public UsersController(UserContrext userContrext)
+       
+
+        public UsersController(UserContrext userContrext )
         {
 
             this.usercontrext = userContrext;
+            
         }
 
         [HttpGet]
-        [Route("GetUsers")]
+        [Route("GetUsersfrom filter")]
 
-        public List<Users> GetUsers()
+        public List<Users> GetUsers(int page =1 , int size =4)
         {
-            return usercontrext.Users.ToList();
+
+            var count = usercontrext.Users.Count();
+            var pagesizes = (int)Math.Ceiling((double)count / size);
+
+            var data = usercontrext.Users.Skip((page - 1) * size).Take(size).ToList();
+
+
+            return data.ToList();
         }
 
 
