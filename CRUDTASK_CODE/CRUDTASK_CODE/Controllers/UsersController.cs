@@ -1,6 +1,10 @@
 ﻿using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -8,75 +12,55 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly UserContrext _userContext;
 
-        private readonly UserContrext usercontrext;
-
-        public UsersController(UserContrext userContrext)
+        public UsersController(UserContrext userContext)
         {
-
-            this.usercontrext = userContrext;
+            _userContext = userContext;
         }
 
-        [HttpGet]
-        [Route("GetUsers")]
-
-        public List<Users> GetUsers()
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<List<Users>>> GetUsers()
         {
-            return usercontrext.Users.ToList();
+            return await _userContext.Users.ToListAsync();
         }
 
-
-        [HttpGet]
-        [Route("GetUser")]
-
-        public Users GetUser(int ID)
+        [HttpGet("GetUser")]
+        public async Task<ActionResult<Users>> GetUser(int ID)
         {
-            return usercontrext.Users.Where(x => x.ID == ID).FirstOrDefault();
+            var user = await _userContext.Users.FirstOrDefaultAsync(x => x.ID == ID);
+            if (user == null)
+                return NotFound("User not found");
+
+            return user;
         }
 
-
-
-
-        [HttpPost]
-        [Route("AddUser")]
-        public string AddUser(Users users)
+        [HttpPost("AddUser")]
+        public async Task<ActionResult<string>> AddUser([FromBody] Users users)
         {
-            string response = string.Empty;
-            usercontrext.Users.Add(users);
-            usercontrext.SaveChanges();
-            return "User Added Successfully";
+            _userContext.Users.Add(users);
+            await _userContext.SaveChangesAsync();
+            return Ok("User Added Successfully");
         }
 
-        [HttpPut]
-        [Route("UpdateUser")]
-
-        public string UpdateUser(Users users)
+        [HttpPut("UpdateUser")]
+        public async Task<ActionResult<string>> UpdateUser([FromBody] Users users)
         {
-
-            usercontrext.Entry(users).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            usercontrext.SaveChanges();
-
-            return " User Updated Successfully";
+            _userContext.Entry(users).State = EntityState.Modified;
+            await _userContext.SaveChangesAsync();
+            return Ok("User Updated Successfully");
         }
 
-        [HttpDelete]
-        [Route("DeleteUser")]
-
-        public string DeleteUser(int id)
+        [HttpDelete("DeleteUser")]
+        public async Task<ActionResult<string>> DeleteUser(int id)
         {
-            Users users= usercontrext.Users.Where(x => x.ID == id).FirstOrDefault();
+            var user = await _userContext.Users.FirstOrDefaultAsync(x => x.ID == id);
+            if (user == null)
+                return NotFound("User Not Found");
 
-            if (users == null)
-            {
-                return "User Not Found";
-            }
-            else
-            {
-
-                usercontrext.Users.Remove(users);
-                usercontrext.SaveChanges();
-                return "User Deleted Successfully";
-            }
+            _userContext.Users.Remove(user);
+            await _userContext.SaveChangesAsync();
+            return Ok("User Deleted Successfully");
         }
     }
 }

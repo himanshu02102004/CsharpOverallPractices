@@ -1,30 +1,31 @@
 ﻿using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CRUDTASK_CODE.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
-
-
     {
-        private readonly ProductContext productContext;
+        private readonly ProductContext _productContext;
 
         public ProductController(ProductContext productContext)
         {
-
-            this.productContext = productContext;
+            _productContext = productContext;
         }
 
 
 
 
-        [HttpPost]
-        [Route("AddProduct")]
-        public string AddProduct(ProductDTO productDto)
+
+
+        [HttpPost("AddProduct")]
+        public async Task<IActionResult> AddProduct(ProductDTO productDto)
         {
             var product = new Product
             {
@@ -33,53 +34,62 @@ namespace CRUDTASK_CODE.Controllers
                 CategoryId = productDto.CategoryId
             };
 
-            productContext.Products.Add(product);
-            productContext.SaveChanges();
-            return "Product Added Successfully";
+            await _productContext.Products.AddAsync(product);
+            await _productContext.SaveChangesAsync();
+
+            return Ok("Product Added Successfully");
         }
+
+
+
+
+
+
+
+
+        [HttpGet("GetProduct")]
+        public async Task<ActionResult<List<Product>>> GetProducts()
+        {
+            var products = await _productContext.Products.ToListAsync();
+            return Ok(products);
+        }
+
+
 
 
         [HttpGet("GetProductID/{id}")]
-        public ActionResult<Product> GetProduct(int id)
-
+        public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            return productContext.Products.Where(x => x.PropId == id).FirstOrDefault();
+            var product = await _productContext.Products.FirstOrDefaultAsync(x => x.PropId == id);
+
+            if (product == null)
+                return NotFound("Product not found");
+
+            return Ok(product);
         }
 
+       
 
-        [HttpPost]
-        [Route("Addthisproduct")]
-        public string Addproduct(Product product)
+        [HttpPut("UpdatetheProduct")]
+        public async Task<IActionResult> UpdateProduct(Product product)
         {
-            string response = string.Empty;
-
-            productContext.Products.Add(product);
-
-            productContext.SaveChanges();
-            return "Product Added Successfully";
+            _productContext.Entry(product).State = EntityState.Modified;
+            await _productContext.SaveChangesAsync();
+            return Ok("Product Updated Successfully");
         }
 
-
-        [HttpPut]
-        [Route("UpdatetheProduct")]
-
-        public string UpdateProduct(Product product)
+        [HttpDelete("DeleteProduct/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            productContext.Entry(product).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            productContext.SaveChanges();
-            return "Product Updated Successfully";
+            var product = await _productContext.Products.FirstOrDefaultAsync(x => x.PropId == id);
+
+            if (product == null)
+                return NotFound("Product not found");
+
+            _productContext.Products.Remove(product);
+            await _productContext.SaveChangesAsync();
+
+            return Ok("Product Deleted Successfully");
         }
-
-
-        [HttpDelete]
-        [Route("DeleteProduct")]
-        public string DeleteProduct(int id)
-        {
-            Product product = productContext.Products.Where(x => x.PropId == id).FirstOrDefault();
-            productContext.Products.Remove(product);
-            productContext.SaveChanges();
-            return "Product Deleted Successfully";
-        }
-
     }
 }

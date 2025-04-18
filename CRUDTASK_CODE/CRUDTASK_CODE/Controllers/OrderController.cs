@@ -2,6 +2,9 @@
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -10,36 +13,39 @@ namespace CRUDTASK_CODE.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ProductContext productContext;
+
         public OrderController(ProductContext productContext)
         {
             this.productContext = productContext;
         }
 
         [HttpGet("GetOrders")]
-        public List<Order> GetOrders()
+        public async Task<ActionResult<List<Order>>> GetOrders()
         {
-            return productContext.Orders
+            var orders = await productContext.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .ToList();
+                .ToListAsync();
+
+            return Ok(orders);
         }
 
         [HttpGet("GetOrderById/{id}")]
-        public ActionResult<Order> GetOrderById(int id)
+        public async Task<ActionResult<Order>> GetOrderById(int id)
         {
-            var order = productContext.Orders
+            var order = await productContext.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .FirstOrDefault(x => x.OrderId == id);
+                .FirstOrDefaultAsync(x => x.OrderId == id);
 
-            if (order == null) return NotFound("Order not found");
+            if (order == null)
+                return NotFound("Order not found");
+
             return Ok(order);
         }
 
-
-
         [HttpPost("AddOrder")]
-        public IActionResult AddOrder([FromBody] OrderDTO orderDto)
+        public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDto)
         {
             var order = new Order
             {
@@ -51,11 +57,10 @@ namespace CRUDTASK_CODE.Controllers
                 }).ToList()
             };
 
-            productContext.Orders.Add(order);
-            productContext.SaveChanges();
+            await productContext.Orders.AddAsync(order);
+            await productContext.SaveChangesAsync();
+
             return Ok("Order Added Successfully");
         }
-
     }
 }
-
