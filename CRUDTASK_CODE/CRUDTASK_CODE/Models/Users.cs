@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace CRUDTASK_CODE.Models
 {
@@ -9,8 +10,12 @@ namespace CRUDTASK_CODE.Models
         public string Name { get; set; }
 
 
-        public string ContactNo { get; set; }
+       public string ContactNo { get; set; }
 
+
+
+        // for soft delete concept
+        public bool IsDeleted { get; set; }
 
     }
 }

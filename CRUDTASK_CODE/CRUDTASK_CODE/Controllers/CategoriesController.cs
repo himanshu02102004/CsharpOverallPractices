@@ -12,36 +12,35 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ProductContext _productContext;
+        private readonly ApiContext productContext;
 
-        public CategoriesController(ProductContext productContext)
+        public CategoriesController(ApiContext productContext)
         {
-            _productContext = productContext;
+           _productContext = productContext;
         }
 
-        [HttpGet("GetCategories")]
-        public async Task<ActionResult<List<Category>>> GetCategories()
-        {
-            var categories = await _productContext.Categories
-                .Include(c => c.Products)
-                .ToListAsync();
 
-            return Ok(categories);
+
+
+        [HttpGet("GetCategories")]
+        public List<Category> GetCategories()
+        {
+            return productContext.Categories.Include(c => c.Products).ToList();
         }
 
         [HttpGet("GetCategoryID/{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public Category GetCategory(int id)
         {
-            var category = await _productContext.Categories
-                .Include(c => c.Products)
-                .FirstOrDefaultAsync(x => x.CategoryId == id);
-
-            if (category == null)
-                return NotFound("Category not found");
-
-            return Ok(category);
+            return productContext.Categories.Include(c => c.Products)
+                                            .FirstOrDefault(x => x.CategoryId == id);
         }
 
+
+
+
+
+
+        
         [HttpPost("AddThisCategory")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryDTO categoryDto)
         {
@@ -55,37 +54,51 @@ namespace CRUDTASK_CODE.Controllers
                 }).ToList()
             };
 
-            await _productContext.Categories.AddAsync(category);
-            await _productContext.SaveChangesAsync();
-
+            productContext.Categories.Add(category);
+            productContext.SaveChanges();
             return Ok("Category Added Successfully");
         }
+
+
+
+
+
+
 
         [HttpPut("UpdateCategory/{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category category)
         {
-            var existingCategory = await _productContext.Categories.FindAsync(id);
+            var existingCategory = productContext.Categories.Find(id);
             if (existingCategory == null)
-                return NotFound("Category not found");
+            {
+                return "Category not found";
+            }
 
             existingCategory.Name = category.Name;
-            _productContext.Entry(existingCategory).State = EntityState.Modified;
-            await _productContext.SaveChangesAsync();
-
-            return Ok("Category Updated Successfully");
+            productContext.Entry(existingCategory).State = EntityState.Modified;
+            productContext.SaveChanges();
+            return "Category Updated Successfully";
         }
+
+
+
+
+
+
 
         [HttpDelete("DeleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _productContext.Categories.FindAsync(id);
+            var category = productContext.Categories.Find(id);
             if (category == null)
-                return NotFound("Category not found");
+            {
+                return "Category not found";
+            }
 
-            _productContext.Categories.Remove(category);
-            await _productContext.SaveChangesAsync();
-
-            return Ok("Category Deleted Successfully");
+            productContext.Categories.Remove(category);
+            productContext.SaveChanges();
+            return "Category Deleted Successfully";
         }
     }
+
 }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDTASK_CODE.Models
 {
-    public class ProductContext:DbContext
-    {   
-
-        public ProductContext(DbContextOptions<ProductContext> options) : base(options)
+    public class ApiContext:DbContext
+    {
+        public readonly ApiContext apiContext;
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options)
         {
         }
 
@@ -13,8 +14,8 @@ namespace CRUDTASK_CODE.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-       
-         
+
+        public DbSet<Users> Users { get; set; }
 
         public DbSet<Product> Products { get; set; }
 
@@ -28,6 +29,11 @@ namespace CRUDTASK_CODE.Models
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
+
+
+
+
+            modelBuilder.Entity<Users>().HasQueryFilter(u => !u.IsDeleted);
 
             base.OnModelCreating(modelBuilder);
 

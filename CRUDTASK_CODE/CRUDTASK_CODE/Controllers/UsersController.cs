@@ -1,10 +1,12 @@
 ﻿using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -14,53 +16,123 @@ namespace CRUDTASK_CODE.Controllers
     {
         private readonly UserContrext _userContext;
 
-        public UsersController(UserContrext userContext)
+        private readonly ApiContext usercontrext;
+
+
+
+        public UsersController(ApiContext userContrext)
         {
-            _userContext = userContext;
+
+            this.usercontrext = userContrext;
+
         }
 
-        [HttpGet("GetUsers")]
-        public async Task<ActionResult<List<Users>>> GetUsers()
+        [HttpGet]
+        [Route("GetUsersfrom filter")]
+
+        public async Task<ActionResult<List<Users>>> GetUsers(int page = 1, int size = 4)
         {
-            return await _userContext.Users.ToListAsync();
+            var count = await usercontrext.Users.CountAsync();
+            var pageSizes = (int)Math.Ceiling((double)count / size);
+
+            var data = await usercontrext.Users
+                                       .Skip((page - 1) * size)
+                                       .Take(size)
+                                       .ToListAsync();
+
+            return Ok(data);
         }
 
-        [HttpGet("GetUser")]
-        public async Task<ActionResult<Users>> GetUser(int ID)
+        [HttpGet("getuser")]
+
+        public async Task<ActionResult<List<Users>>> get()
         {
-            var user = await _userContext.Users.FirstOrDefaultAsync(x => x.ID == ID);
+            var users = await usercontrext.Users.ToListAsync();
+            return Ok(users);
+        }
+
+
+
+
+        [HttpGet("GetUserByID")]
+        public async Task<ActionResult<Users>> GetUser(int id)
+        {
+            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
             if (user == null)
                 return NotFound("User not found");
 
-            return user;
+            return Ok(user);
         }
 
-        [HttpPost("AddUser")]
-        public async Task<ActionResult<string>> AddUser([FromBody] Users users)
+
+
+
+
+
+        [HttpPost]
+        [Route("AddUser")]
+        public async Task<ActionResult<string>> AddUser(Users users)
         {
-            _userContext.Users.Add(users);
-            await _userContext.SaveChangesAsync();
+            usercontrext.Users.Add(users);
+            await usercontrext.SaveChangesAsync();
             return Ok("User Added Successfully");
         }
 
-        [HttpPut("UpdateUser")]
-        public async Task<ActionResult<string>> UpdateUser([FromBody] Users users)
+        [HttpPut]
+        [Route("UpdateUser")]
+        public async Task<ActionResult<string>> UpdateUser(Users users)
         {
-            _userContext.Entry(users).State = EntityState.Modified;
-            await _userContext.SaveChangesAsync();
+            usercontrext.Entry(users).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await usercontrext.SaveChangesAsync();
             return Ok("User Updated Successfully");
         }
 
-        [HttpDelete("DeleteUser")]
-        public async Task<ActionResult<string>> DeleteUser(int id)
+        //[HttpDelete]
+        //[Route("DeleteUser")]
+        //public async Task<ActionResult<string>> DeleteUser(int id)
+        //{
+        //    var users = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
+
+        //    if (users == null)
+        //    {
+        //        return NotFound("User Not Found");
+        //    }
+
+        //    usercontrext.Users.Remove(users);
+        //    await usercontrext.SaveChangesAsync();
+        //    return Ok("User Deleted Successfully");
+        //}
+
+
+        //[HttpDelete("{id}")]
+        //[Route("DeleteUser")]
+        //public async Task<ActionResult<string>> DeleteUsers(int id)
+        //{
+        //    var users = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
+
+        //    if (users == null)
+        //    {
+        //        return NotFound("User Not Found");
+        //    }
+
+        //    users.IsDeleted = true;
+        //    await usercontrext.SaveChangesAsync();
+        //    return Ok("User Deleted Successfully");
+        //}
+
+        [HttpDelete("DeleteUserSoft/{id}")]
+        public async Task<ActionResult<string>> DeleteUsers(int id)
         {
-            var user = await _userContext.Users.FirstOrDefaultAsync(x => x.ID == id);
+            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
+
             if (user == null)
                 return NotFound("User Not Found");
 
-            _userContext.Users.Remove(user);
-            await _userContext.SaveChangesAsync();
-            return Ok("User Deleted Successfully");
+            user.IsDeleted = true;
+            await usercontrext.SaveChangesAsync();
+
+            return Ok("User Soft Deleted Successfully");
         }
     }
 }
+
