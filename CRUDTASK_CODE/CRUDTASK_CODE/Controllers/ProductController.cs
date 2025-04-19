@@ -1,6 +1,7 @@
 ﻿using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
 namespace CRUDTASK_CODE.Controllers
@@ -23,9 +24,8 @@ namespace CRUDTASK_CODE.Controllers
 
 
 
-        [HttpPost]
-        [Route("AddProduct")]
-        public string AddProduct(ProductDTO productDto)
+        [HttpPost("AddProduct")]
+        public async Task<IActionResult> AddProduct([FromBody] ProductDTO productDto)
         {
             var product = new Product
             {
@@ -34,63 +34,89 @@ namespace CRUDTASK_CODE.Controllers
                 CategoryId = productDto.CategoryId
             };
 
-            productContext.Products.Add(product);
-            productContext.SaveChanges();
-            return "Product Added Successfully";
+            await productContext.Products.AddAsync(product);
+            await productContext.SaveChangesAsync();
+
+            return Ok("Product Added Successfully");
         }
 
 
-        [HttpGet("GetProductID/{id}")]
-        public ActionResult<Product> GetProduct(int id)
+        [HttpGet("getproduct")]
 
+        public async Task<ActionResult<List<Product>>> getprod()
         {
-            return productContext.Products.Where(x => x.PropId == id).FirstOrDefault();
+            var productss = await productContext.Products.ToListAsync();
+            return Ok(productss);
         }
 
 
-        [HttpGet("getProducall by filter")]
-        public List<Product> getin( int page=1,int size=10)
+        [HttpGet("GetProductByID/{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var count = productContext.Products.Count();
-            var filter = (int)Math.Ceiling((double)count / size);
+            var product = await productContext.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Product not found");
 
-            var list = productContext.Products.Skip((page - 1) * size).Take(size).ToList();
-
-            return productContext.Products.ToList();
-        } 
-
-        [HttpPost]
-        [Route("Addthisproduct")]
-        public string Addproduct(Product product)
-        {
-            string response = string.Empty;
-
-            productContext.Products.Add(product);
-
-            productContext.SaveChanges();
-            return "Product Added Successfully";
+            return Ok(product);
         }
+
+
+
+
+        [HttpGet("GetProductsByFilter")]
+        public async Task<ActionResult<List<Product>>> GetProductsByFilter(int page = 1, int size = 10)
+        {
+            if (page <= 0 || size <= 0)
+                return BadRequest("Page and size must be greater than zero.");
+
+           var totalCount = await productContext.Products.CountAsync();
+
+         var pageSizes = (int)Math.Ceiling((double)totalCount / size);
+
+            var products = await productContext.Products
+                                               .Skip((page - 1) * size)
+                                               .Take(size)
+                                               .ToListAsync();
+
+            return Ok(products);
+        }
+
+
+       
+
+
 
 
         [HttpPut]
-        [Route("UpdatetheProduct")]
-
-        public string UpdateProduct(Product product)
+        [Route("UpdateTheProduct")]
+        public async Task<IActionResult> UpdateProduct([FromBody] Product product)
         {
-            productContext.Entry(product).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            productContext.SaveChanges();
-            return "Product Updated Successfully";
+            var existingProduct = await productContext.Products.FindAsync(product.PropId);
+            if (existingProduct == null)
+                return NotFound("Product not found");
+
+            existingProduct.PropName = product.PropName;
+            existingProduct.PropPrice = product.PropPrice;
+            existingProduct.CategoryId = product.CategoryId;
+
+            await productContext.SaveChangesAsync();
+
+            return Ok("Product Updated Successfully");
         }
 
 
-        [HttpDelete]
-        [Route("DeleteProduct")]
-        public string DeleteProduct(int id)
+
+        [HttpDelete("DeleteProduct/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            Product product = productContext.Products.Where(x => x.PropId == id).FirstOrDefault();
+            var product = await productContext.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Product not found");
+
             productContext.Products.Remove(product);
-            productContext.SaveChanges();
-            return "Product Deleted Successfully";
+            await productContext.SaveChangesAsync();
+
+            return Ok("Product Deleted Successfully");
         }
 
     }

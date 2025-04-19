@@ -16,30 +16,73 @@ namespace CRUDTASK_CODE.Controllers
         }
 
         [HttpGet("GetOrders")]
-        public List<Order> GetOrders()
+        public async Task<ActionResult<List<Order>>> GetOrders()
         {
-            return productContext.Orders
+            var orders = await productContext.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .ToList();
+                .ToListAsync();
+
+            return Ok(orders);
         }
 
-        [HttpGet("GetOrderById/{id}")]
-        public ActionResult<Order> GetOrderById(int id)
+
+
+
+        [HttpPost("FilterOrders")]
+        public async Task<ActionResult<List<Order>>> FilterOrders([FromBody] OrderfilterDTO filter)
         {
-            var order = productContext.Orders
+            var query = productContext.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .FirstOrDefault(x => x.OrderId == id);
+                .AsQueryable();
 
-            if (order == null) return NotFound("Order not found");
+            if (!string.IsNullOrEmpty(filter.CustomerName)) 
+            {
+                query = query.Where(o => o.CustomerName.Contains(filter.CustomerName));
+            }
+
+            if (filter.MinTotal.HasValue)
+            {
+                query = query.Where(o =>
+                    o.OrderItems.Sum(i => i.Quantity * i.Product.PropPrice) >= filter.MinTotal.Value);
+            }
+
+            var result = await query.ToListAsync();
+            return Ok(result);
+        }
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet("GetOrderById/{id}")]
+        public async Task<ActionResult<Order>> GetOrderById(int id)
+        {
+            var order = await productContext.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .FirstOrDefaultAsync(x => x.OrderId == id);
+
+            if (order == null)
+                return NotFound("Order not found");
+
             return Ok(order);
         }
 
 
 
+
+
+
         [HttpPost("AddOrder")]
-        public IActionResult AddOrder([FromBody] OrderDTO orderDto)
+        public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDto)
         {
             var order = new Order
             {
@@ -51,11 +94,14 @@ namespace CRUDTASK_CODE.Controllers
                 }).ToList()
             };
 
-            productContext.Orders.Add(order);
-            productContext.SaveChanges();
+            await productContext.Orders.AddAsync(order);
+            await productContext.SaveChangesAsync();
+
             return Ok("Order Added Successfully");
         }
-
     }
 }
+
+
+
 
