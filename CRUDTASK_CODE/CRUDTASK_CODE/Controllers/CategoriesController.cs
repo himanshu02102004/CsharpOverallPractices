@@ -2,9 +2,6 @@
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -12,35 +9,41 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ApiContext productContext;
+        private readonly ApiContext _productContext;
 
         public CategoriesController(ApiContext productContext)
         {
-           _productContext = productContext;
+            _productContext = productContext;
         }
 
 
 
 
         [HttpGet("GetCategories")]
-        public List<Category> GetCategories()
+        public async Task<ActionResult<List<Category>>> GetCategories()
         {
-            return productContext.Categories.Include(c => c.Products).ToList();
+            var categories = await _productContext.Categories
+                                                  .Include(c => c.Products)
+                                                  .ToListAsync();
+            return Ok(categories);
         }
+
+
 
         [HttpGet("GetCategoryID/{id}")]
-        public Category GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            return productContext.Categories.Include(c => c.Products)
-                                            .FirstOrDefault(x => x.CategoryId == id);
+            var category = await _productContext.Categories
+                                                .Include(c => c.Products)
+                                                .FirstOrDefaultAsync(x => x.CategoryId == id);
+            if (category == null)
+                return NotFound("Category not found");
+
+            return Ok(category);
         }
 
 
 
-
-
-
-        
         [HttpPost("AddThisCategory")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryDTO categoryDto)
         {
@@ -54,51 +57,42 @@ namespace CRUDTASK_CODE.Controllers
                 }).ToList()
             };
 
-            productContext.Categories.Add(category);
-            productContext.SaveChanges();
+            await _productContext.Categories.AddAsync(category);
+            await _productContext.SaveChangesAsync();
+
             return Ok("Category Added Successfully");
         }
-
-
-
-
 
 
 
         [HttpPut("UpdateCategory/{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category category)
         {
-            var existingCategory = productContext.Categories.Find(id);
+            var existingCategory = await _productContext.Categories.FindAsync(id);
             if (existingCategory == null)
-            {
-                return "Category not found";
-            }
+                return NotFound("Category not found");
 
             existingCategory.Name = category.Name;
-            productContext.Entry(existingCategory).State = EntityState.Modified;
-            productContext.SaveChanges();
-            return "Category Updated Successfully";
+
+            _productContext.Entry(existingCategory).State = EntityState.Modified;
+            await _productContext.SaveChangesAsync();
+
+            return Ok("Category Updated Successfully");
         }
-
-
-
-
 
 
 
         [HttpDelete("DeleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = productContext.Categories.Find(id);
+            var category = await _productContext.Categories.FindAsync(id);
             if (category == null)
-            {
-                return "Category not found";
-            }
+                return NotFound("Category not found");
 
-            productContext.Categories.Remove(category);
-            productContext.SaveChanges();
-            return "Category Deleted Successfully";
+            _productContext.Categories.Remove(category);
+            await _productContext.SaveChangesAsync();
+
+            return Ok("Category Deleted Successfully");
         }
     }
-
 }

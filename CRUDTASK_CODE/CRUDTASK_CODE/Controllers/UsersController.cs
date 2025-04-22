@@ -1,12 +1,8 @@
 ﻿using CRUDTASK_CODE.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Query;
-using Sieve.Models;
-using Sieve.Services;
+
 
 namespace CRUDTASK_CODE.Controllers
 {
@@ -14,7 +10,7 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserContrext _userContext;
+        
 
         private readonly ApiContext usercontrext;
 
