@@ -1,4 +1,5 @@
-﻿using CRUDTASK_CODE.DTOs;
+﻿using CRUD_TASK_WEB.Models;
+using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,7 @@ namespace CRUDTASK_CODE.Controllers
                 .ThenInclude(oi => oi.Product)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter.CustomerName)) 
+            if (!string.IsNullOrEmpty(filter.CustomerName))
             {
                 query = query.Where(o => o.CustomerName.Contains(filter.CustomerName));
             }
@@ -104,6 +105,7 @@ namespace CRUDTASK_CODE.Controllers
         }
     }
 }
+
 
 
 

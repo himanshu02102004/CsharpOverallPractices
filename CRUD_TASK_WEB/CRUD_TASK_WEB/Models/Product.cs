@@ -11,8 +11,9 @@ namespace CRUDTASK_CODE.Models
 
         public Decimal PropPrice { get; set; }
 
-        public int  CategoryId  { get; set; }
+        public int CategoryId { get; set; }
 
-        public Category Category { get; set; }
+       public Category Category { get; set; }
     }
 }
+

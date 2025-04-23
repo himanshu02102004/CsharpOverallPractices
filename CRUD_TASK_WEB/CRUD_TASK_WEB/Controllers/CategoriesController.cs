@@ -1,4 +1,5 @@
-﻿using CRUDTASK_CODE.DTOs;
+﻿using CRUD_TASK_WEB.Models;
+using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

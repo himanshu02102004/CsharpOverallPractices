@@ -1,4 +1,5 @@
-﻿using CRUDTASK_CODE.Models;
+﻿using CRUD_TASK_WEB.Models;
+using CRUDTASK_CODE.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace CRUDTASK_CODE.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        
+
 
         private readonly ApiContext usercontrext;
 
@@ -131,4 +132,6 @@ namespace CRUDTASK_CODE.Controllers
         }
     }
 }
+
+
 

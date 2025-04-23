@@ -8,10 +8,11 @@ namespace CRUDTASK_CODE.Models
         public int OrderId { get; set; }  // Primary key
 
         public string CustomerName { get; set; }
-       
 
-        public DateTime OrderDate { get; set; } 
+
+        public DateTime OrderDate { get; set; }
 
         public List<OrderItem> OrderItems { get; set; }
     }
 }
+

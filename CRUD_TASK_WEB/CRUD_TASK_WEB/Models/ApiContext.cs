@@ -1,9 +1,11 @@
-﻿
+﻿using CRUDTASK_CODE.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
-namespace CRUDTASK_CODE.Models
+namespace CRUD_TASK_WEB.Models
 {
-    public class ApiContext:DbContext
+    public class ApiContext : DbContext
     {
         public readonly ApiContext apiContext;
         public ApiContext(DbContextOptions<ApiContext> options) : base(options)
@@ -16,7 +18,6 @@ namespace CRUDTASK_CODE.Models
         public DbSet<OrderItem> OrderItems { get; set; }
 
         public DbSet<Users> Users { get; set; }
-
         public DbSet<Product> Products { get; set; }
 
 
@@ -39,5 +40,6 @@ namespace CRUDTASK_CODE.Models
 
         }
 
-        }
     }
+}
+

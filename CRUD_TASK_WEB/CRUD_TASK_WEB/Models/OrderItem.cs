@@ -7,12 +7,12 @@ namespace CRUDTASK_CODE.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
         [ForeignKey("Order")]
         public int OrderId { get; set; }
 
-        
-      
+
+
         public Order Order { get; set; }
 
         [ForeignKey("Product")]
@@ -22,3 +22,4 @@ namespace CRUDTASK_CODE.Models
         public int Quantity { get; set; }
     }
 }
+ 

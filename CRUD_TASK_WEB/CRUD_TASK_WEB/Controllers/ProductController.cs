@@ -1,4 +1,5 @@
-﻿using CRUDTASK_CODE.DTOs;
+﻿using CRUD_TASK_WEB.Models;
+using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,12 +33,18 @@ namespace CRUDTASK_CODE.Controllers
             return Ok("Product Added Successfully");
         }
 
+
+
         [HttpGet("getproduct")]
         public async Task<ActionResult<List<Product>>> GetAllProducts()
         {
             var products = await _productContext.Products.ToListAsync();
             return Ok(products);
         }
+
+
+
+
 
         [HttpGet("GetProductByID/{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
@@ -48,6 +55,8 @@ namespace CRUDTASK_CODE.Controllers
 
             return Ok(product);
         }
+
+
 
         [HttpGet("GetProductsByFilter")]
         public async Task<ActionResult<List<Product>>> GetProductsByFilter(int page = 1, int size = 10)
@@ -96,3 +105,4 @@ namespace CRUDTASK_CODE.Controllers
         }
     }
 }
+
