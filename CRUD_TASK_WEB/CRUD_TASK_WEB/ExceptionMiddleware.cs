@@ -32,7 +32,7 @@
         var response = new
         {
             statusCode = context.Response.StatusCode,
-            message = ex.Message,                      // main error message
+            message = "server is down please come again",                      // main error message
             details = ex.InnerException?.Message       // extra info if available
         };
 

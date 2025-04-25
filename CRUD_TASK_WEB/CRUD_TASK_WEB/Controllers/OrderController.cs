@@ -23,9 +23,9 @@ namespace CRUDTASK_CODE.Controllers
         public async Task<ActionResult<List<Order>>> GetOrders()
         {
             var orders = await productContext.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Product)
-                .ToListAsync();
+               .Include(o => o.OrderItems)
+               .ThenInclude(oi => oi.Product)
+              .ToListAsync();
 
             return Ok(orders);
         }
@@ -88,16 +88,30 @@ namespace CRUDTASK_CODE.Controllers
         [HttpPost("AddOrder")]
         public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDto)
         {
+            foreach (var res in orderDto.OrderItems)
+            {
+                if(res.Quantity < 1)
+                {
+                    return BadRequest("Quantity at least 1");
+                }
+            }
             var order = new Order
             {
+                
+
                 CustomerName = orderDto.CustomerName,
+
+                
+              
                 OrderItems = orderDto.OrderItems.Select(item => new OrderItem
                 {
                     PropId = item.ProductId,
                     Quantity = item.Quantity
+                   
                 }).ToList()
+                
             };
-
+          
             await productContext.Orders.AddAsync(order);
             await productContext.SaveChangesAsync();
 

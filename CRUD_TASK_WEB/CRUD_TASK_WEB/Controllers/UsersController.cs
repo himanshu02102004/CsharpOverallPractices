@@ -1,4 +1,5 @@
-﻿using CRUD_TASK_WEB.Models;
+﻿using CRUD_TASK_WEB.DTOs;
+using CRUD_TASK_WEB.Models;
 using CRUDTASK_CODE.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,11 @@ namespace CRUDTASK_CODE.Controllers
         public async Task<ActionResult<List<Users>>> get()
         {
             var users = await usercontrext.Users.ToListAsync();
+           
+            if (users == null)
+            {
+                return NotFound("user not present");
+            }
             return Ok(users);
         }
 
@@ -54,7 +60,7 @@ namespace CRUDTASK_CODE.Controllers
         [HttpGet("GetUserByID")]
         public async Task<ActionResult<Users>> GetUser(int id)
         {
-            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
+            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id && x.IsDeleted ==true);
             if (user == null)
                 return NotFound("User not found");
 
@@ -68,11 +74,27 @@ namespace CRUDTASK_CODE.Controllers
 
         [HttpPost]
         [Route("AddUser")]
-        public async Task<ActionResult<string>> AddUser(Users users)
+        public async Task<ActionResult<string>> AddUser(UserDTO user)
         {
-            usercontrext.Users.Add(users);
+
+            var hashed = BCrypt.Net.BCrypt.HashPassword(user.password);
+            var data = new Users
+            {
+                Name=user.Name,
+                emailaddress=user.emailaddress,
+                ContactNo=user.ContactNo,
+                password=hashed
+
+            };
+            usercontrext.Users.Add(data);
             await usercontrext.SaveChangesAsync();
             return Ok("User Added Successfully");
+
+           
+
+
+
+
         }
 
         [HttpPut]

@@ -1,10 +1,8 @@
 ﻿namespace CRUD_TASK_WEB.DTOs
 {
-    public class LoginDTO
+    public class LoginDto
     {
-
-        public string Usersname { get; set; }
-
-        public string Password { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
     }
 }
