@@ -2,6 +2,7 @@
 using CRUD_TASK_WEB.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_TASK_WEB.Controllers
 {
@@ -19,18 +20,24 @@ namespace CRUD_TASK_WEB.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Loginuser(LoginDto login)
         {
-            var data = database.Users.FirstOrDefault(x => x.emailaddress == login.email);
+            var data = await database.Users.FirstOrDefaultAsync(x => x.emailaddress == login.email);
             if (data == null)
             {
                 return NotFound();
             }
 
-            bool Valid = BCrypt.Net.BCrypt.Verify(login.password,data.password);
+            bool Valid = BCrypt.Net.BCrypt.Verify(login.password, data.password);
             if (!Valid)
             {
                 return BadRequest("Invalid credentail");
             }
             return Ok("Login Successfully");
+
+
+
+
+
+
 
         }
     }
