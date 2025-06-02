@@ -1,7 +1,6 @@
 ﻿using CRUDTASK_CODE.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+
 
 namespace CRUD_TASK_WEB.Models
 {

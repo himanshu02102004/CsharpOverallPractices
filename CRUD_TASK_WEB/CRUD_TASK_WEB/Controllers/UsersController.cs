@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRUDTASK_CODE.Controllers
 {
-    [Route("api/[controller]")]
+   // [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -88,6 +88,7 @@ namespace CRUDTASK_CODE.Controllers
             };
             usercontrext.Users.Add(data);
             await usercontrext.SaveChangesAsync();
+
             return Ok("User Added Successfully");
 
            
@@ -106,22 +107,7 @@ namespace CRUDTASK_CODE.Controllers
             return Ok("User Updated Successfully");
         }
 
-        //[HttpDelete]
-        //[Route("DeleteUser")]
-        //public async Task<ActionResult<string>> DeleteUser(int id)
-        //{
-        //    var users = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id);
-
-        //    if (users == null)
-        //    {
-        //        return NotFound("User Not Found");
-        //    }
-
-        //    usercontrext.Users.Remove(users);
-        //    await usercontrext.SaveChangesAsync();
-        //    return Ok("User Deleted Successfully");
-        //}
-
+       
 
         //[HttpDelete("{id}")]
         //[Route("DeleteUser")]
