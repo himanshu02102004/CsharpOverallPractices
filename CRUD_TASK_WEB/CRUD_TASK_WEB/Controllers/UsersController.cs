@@ -1,9 +1,11 @@
 ﻿using CRUD_TASK_WEB.DTOs;
 using CRUD_TASK_WEB.Models;
 using CRUDTASK_CODE.Models;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using System;
 
 
 namespace CRUDTASK_CODE.Controllers
@@ -41,6 +43,11 @@ namespace CRUDTASK_CODE.Controllers
             return Ok(data);
         }
 
+
+
+
+
+        [Authorize]
         [HttpGet("getuser")]
 
         public async Task<ActionResult<List<Users>>> get()
@@ -56,11 +63,12 @@ namespace CRUDTASK_CODE.Controllers
 
 
 
-
+        [Authorize]
         [HttpGet("GetUserByID")]
         public async Task<ActionResult<Users>> GetUser(int id)
         {
-            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id && x.IsDeleted ==true);
+            // var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id && x.IsDeleted ==true);
+            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id );
             if (user == null)
                 return NotFound("User not found");
 
