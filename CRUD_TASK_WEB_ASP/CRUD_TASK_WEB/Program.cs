@@ -6,6 +6,12 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using CRUD_TASK_WEB.Services.IServices;
+using CRUD_TASK_WEB.Services;
+using CRUD_TASK_WEB.NewServices.INewServices;
+using CRUD_TASK_WEB.NewServices;
+using CRUD_TASK_WEB.NewServices2.INewServices2;
+using CRUD_TASK_WEB.NewServices2;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbcon")));
 
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<IOrderServices, OrderServices>();
+builder.Services.AddScoped<IUserService, UserServices>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

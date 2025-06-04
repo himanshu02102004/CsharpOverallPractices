@@ -1,4 +1,5 @@
 ﻿using CRUD_TASK_WEB.Models;
+using CRUD_TASK_WEB.Services.IServices;
 using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace CRUDTASK_CODE.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ApiContext _productContext;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(ApiContext productContext)
+        public CategoriesController(ApiContext productContext, ICategoryService categoryService)
         {
             _productContext = productContext;
+            _categoryService = categoryService;
         }
 
 
@@ -34,12 +37,9 @@ namespace CRUDTASK_CODE.Controllers
         [HttpGet("GetCategoryID/{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _productContext.Categories
-                                                .Include(c => c.Products)
-                                                .FirstOrDefaultAsync(x => x.CategoryId == id);
+            var category = await _categoryService.GetCategory(id);
             if (category == null)
                 return NotFound("Category not found");
-
             return Ok(category);
         }
 

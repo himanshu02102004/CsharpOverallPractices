@@ -1,4 +1,5 @@
 ﻿using CRUD_TASK_WEB.Models;
+using CRUD_TASK_WEB.NewServices.INewServices;
 using CRUDTASK_CODE.DTOs;
 using CRUDTASK_CODE.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace CRUDTASK_CODE.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ApiContext _productContext;
+        private readonly IProductServices _productServices;
 
-        public ProductController(ApiContext productContext)
+        public ProductController(ApiContext productContext, IProductServices productServices )
         {
             _productContext = productContext;
+            _productServices = productServices;
         }
 
         [HttpPost("AddProduct")]
