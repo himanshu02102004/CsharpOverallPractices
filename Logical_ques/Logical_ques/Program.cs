@@ -60,10 +60,13 @@ namespace Logical_ques
 
 
 
-            /
-          
+            //MAX_NO_LINQ.MAX();
 
-
+            //   Remove_duplicate_witoutinbuilt.Duplicate();
+            int[] arr = { 8, 2, 4, 5, 3, 7, 1 };
+          int store=  MISSING_UNSORTED.Missingunsort(arr);
+            Console.WriteLine(store);
+            
 
 
 
