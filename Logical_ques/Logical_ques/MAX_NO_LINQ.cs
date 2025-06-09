@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
+////maximum number using linq
+
 namespace Logical_ques
 {
     class MAX_NO_LINQ
