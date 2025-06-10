@@ -5,6 +5,29 @@ namespace Logical_ques
     {
         static void Main(string[] args)
         {
+
+            /// question for first non repeating character
+            /// 
+            //string str = "swiss";
+            //char result = FIRST_NON_REPEATING_CHARACTER.repeatingcharacter(str);
+
+            //if(result == '\0')
+            //{
+            //    Console.WriteLine(" all character are repeated");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("first nonb repeat character are  " +  result);
+            //}
+
+
+
+            
+
+
+
+
+
             //Second_Larg_ques_1.Ques1();
 
             // Reverse_int.Ques2();
@@ -63,10 +86,10 @@ namespace Logical_ques
             //MAX_NO_LINQ.MAX();
 
             //   Remove_duplicate_witoutinbuilt.Duplicate();
-            int[] arr = { 8, 2, 4, 5, 3, 7, 1 };
-          int store=  MISSING_UNSORTED.Missingunsort(arr);
-            Console.WriteLine(store);
-            
+            //  int[] arr = { 8, 2, 4, 5, 3, 7, 1 };
+            //int store=  MISSING_UNSORTED.Missingunsort(arr);
+            //  Console.WriteLine(store);
+
 
 
 

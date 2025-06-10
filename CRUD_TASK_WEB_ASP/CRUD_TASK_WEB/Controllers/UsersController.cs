@@ -63,12 +63,12 @@ namespace CRUDTASK_CODE.Controllers
 
 
 
-        [Authorize]
+      //  [Authorize]
         [HttpGet("GetUserByID")]
         public async Task<ActionResult<Users>> GetUser(int id)
         {
-            // var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id && x.IsDeleted ==true);
-            var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id );
+             var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id && x.IsDeleted ==true);
+          //  var user = await usercontrext.Users.FirstOrDefaultAsync(x => x.ID == id );
             if (user == null)
                 return NotFound("User not found");
 

@@ -1,20 +1,25 @@
 using System;
-using CRUD_TASK_WEB;
-using CRUD_TASK_WEB.Models;
 using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using CRUD_TASK_WEB.Services.IServices;
-using CRUD_TASK_WEB.Services;
-using CRUD_TASK_WEB.NewServices.INewServices;
-using CRUD_TASK_WEB.NewServices;
-using CRUD_TASK_WEB.NewServices2.INewServices2;
-using CRUD_TASK_WEB.NewServices2;
 
+using CRUD_TASK_WEB;
+using CRUD_TASK_WEB.Models;
+using CRUD_TASK_WEB.Services;
+using CRUD_TASK_WEB.Services.IServices;
+using CRUD_TASK_WEB.NewServices;
+using CRUD_TASK_WEB.NewServices.INewServices;
+using CRUD_TASK_WEB.NewServices2;
+using CRUD_TASK_WEB.NewServices2.INewServices2;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ---------------------- Services Configuration ----------------------
 
 builder.Services.AddDbContext<ApiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbcon")));
@@ -28,18 +33,10 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-
-
 builder.Services.AddSwaggerGen();
 
-///// jwt aunthentication
+// ---------------------- JWT Authentication ----------------------
 
 builder.Services.AddAuthentication(options =>
 {
@@ -61,30 +58,66 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
-
-
 var app = builder.Build();
-app.UseAuthentication();
 
-// Configure the HTTP request pipeline.
+// ---------------------- Middleware Configuration ----------------------
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
-//app.UseMiddleware<ExceptionMiddleware>();
-
-
-
-
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
+// ---------------------- Start Server ----------------------
+
 app.Run();
+
+// ---------------------- OPTIONAL: Basic Auth Client Test ----------------------
+// If you still want to test an external API using Basic Auth, you can do it in a separate method like this:
+
+/*
+await TestBasicAuth();
+
+async Task TestBasicAuth()
+{
+    var url = "http://localhost:5139";
+    var username = "himu";
+    var password = "password";
+
+    var client = new HttpClient
+    {
+        BaseAddress = new Uri(url)
+    };
+
+    var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+
+    try
+    {
+        var response = await client.GetAsync("/Login");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+        }
+        else
+        {
+            Console.WriteLine("Error: " + response.StatusCode);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Exception: " + ex.Message);
+    }
+}
+*/
