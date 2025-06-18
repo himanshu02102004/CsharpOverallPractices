@@ -49,6 +49,7 @@ app.UseEndpoints(endpoint =>
 
 });
 
+object  A = 10;
 
 
 
