@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVC_PART1.Models
 {
@@ -12,8 +13,8 @@ namespace MVC_PART1.Models
         [Required,EmailAddress]
         public  string Email { get; set; }=string.Empty;
 
-        public ICollection<EventRegistration> Registrations {  get; set; }
-
+        [ValidateNever] // Skip validation
+        public ICollection<EventRegistration> Registrations { get; set; } = new List<EventRegistration>();
 
     }
 }

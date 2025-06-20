@@ -1,10 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
-
-
-
-
 namespace MVC_PART1.Models
 {
     public class AppDbContext: DbContext
@@ -19,6 +15,10 @@ namespace MVC_PART1.Models
         public DbSet<Event> Events { get; set; }    
         public DbSet<User> Users { get; set; }
         public DbSet<EventRegistration> EventsRegistration { get; set; }
-       
+
+        internal async Task FindAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

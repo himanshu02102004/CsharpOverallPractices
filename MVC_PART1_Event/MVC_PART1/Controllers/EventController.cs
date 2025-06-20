@@ -1,138 +1,169 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_PART1.Models;
-
-
+using System.Data;
 
 namespace MVC_PART1.Controllers
 {
     public class EventController : Controller
-
     {
-
         private readonly AppDbContext _appDbContext;
+
         public EventController(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-
-        //GET: /Event
-        public IActionResult Index() {
-
-            var Events = _appDbContext.Events.ToList();
-            return View(Events);
-
-        }
-
-
-        //Event Created
-
-        public IActionResult Create() {
-
-            return View();
-
-        }
-
-
-
-
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Event ev) {
-
-            if (ModelState.IsValid) {
-
-                _appDbContext.Events.Add(ev);
-                _appDbContext.SaveChanges();
-                TempData["Success"] = "Event created Successfully";
-                return RedirectToAction();
-
-
-            }
-
-            return View();
-        }
-
-        /// id get detail
-        
-
-        [HttpGet]
-        public IActionResult Register(int Id)
+        // GET: /Event
+        public async Task<IActionResult> Index()
         {
-            var er = _appDbContext.Users.Find(Id);
+            var events = await _appDbContext.Events.ToListAsync();
+            return View(events);
+        }
 
-            if (er != null)
+
+
+
+
+        // GET: Event/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Event/Create
+        [HttpPost]
+        public async Task<IActionResult> Create(Event ev)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ev);
+            }
+            _appDbContext.Events.Add(ev);
+            await _appDbContext.SaveChangesAsync();
+            TempData["Success"] = "Event created successfully";
+            return RedirectToAction("Index", "Event");
+
+        }
+
+
+
+
+
+
+
+
+        // GET: Event/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
-            return View(er);
+
+            var ev = await _appDbContext.Events
+                        .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (ev == null)
+            {
+                return NotFound();
+            }
+
+            return View(ev);
         }
 
 
 
 
 
-        //post events/registrer/id
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Register(int id, string email) {
 
-            var user = _appDbContext.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
+
+
+        ///Delete events
+
+        //public async Task<IActionResult> Deletes(int id)
+        //{
+        //    var ev = await _appDbContext.Events.FindAsync(id);
+        //    return View(ev);
+
+        //}
+
+       
+        public async Task<IActionResult> Delete(int id)
+        {
+            var ev = await _appDbContext.Events.FindAsync(id);
+
+            if (ev == null)
             {
-                TempData["Error"] = "User is not found";
-                return RedirectToAction(nameof(Register), new { id });
-
-            }
-            var alreadyregistered = _appDbContext.EventsRegistration.Any(r => r.EventId == id && r.UserId == user.ID);
-
-            if (alreadyregistered)
-            {
-                TempData["Eror"] = "Already registrered";
-                return RedirectToAction(nameof(Register), new { id });
-
+                return NotFound();
             }
 
-            _appDbContext.EventsRegistration.Add(new EventRegistration { EventId = id, UserId = user.ID });
-            _appDbContext.SaveChanges();
-            TempData["Success"] = "Registration succesfull";
-            return RedirectToAction(nameof(Index));
-   }
+            _appDbContext.Events.Remove(ev);
+            await _appDbContext.SaveChangesAsync();
+
+            TempData["Success"] = "Event deleted successfully!";
+            return RedirectToAction("Index");
+        }
 
 
+
+
+        ////EDIT 
+        
+
+        public async Task<IActionResult> Edits(int id) {
+
+            var ev = await _appDbContext.Events.FindAsync(id);
+            if (ev == null)
+                return NotFound();
+            return View(ev);
+
+        }
 
 
        
-        public IActionResult Details(int id) {
-
-            var ev = _appDbContext.Events
-                                .Include(e => e.Registrations.Select(r=>r.Users))
-                                .FirstOrDefault(User => User.ID == id);
-            if(ev== null)
+        public async Task<IActionResult> Edit(Event ev)
+        {
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                _appDbContext.Update(ev);
+                await _appDbContext.SaveChangesAsync();
+                TempData["Success"] = "Event updated successfully!";
+                return RedirectToAction("Index");
             }
-                                
-                               
-          return View(ev);
-            
-
+            return View(ev);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <param name="disposing"></param>
+
+
+
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _appDbContext.Dispose(); // Release the DbContext and its resources
+                _appDbContext.Dispose();
             }
-            base.Dispose(disposing); // Call the base Controller's Dispose method
+            base.Dispose(disposing);
         }
-
-
     }
 }
