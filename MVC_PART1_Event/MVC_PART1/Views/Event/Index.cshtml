@@ -1,8 +1,26 @@
 ﻿@model IEnumerable<MVC_PART1.Models.Event>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Indexss";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
 }
+
+@{
+    var successMessage = TempData["Success"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+
+
+
+
 
 <h1>Index</h1>
 

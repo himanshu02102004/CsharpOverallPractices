@@ -1,18 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_PART1.Models;
+using MVC_PART1.Services;
 using System.Data;
 
 namespace MVC_PART1.Controllers
 {
+
+    //filter
+    [Roleauthorize(Roles = "Admin,User")]
     public class EventController : Controller
     {
         private readonly AppDbContext _appDbContext;
 
+      
+
         public EventController(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
+           
         }
+
+
+
+
+
+
 
         // GET: /Event
         public async Task<IActionResult> Index()
@@ -134,20 +147,6 @@ namespace MVC_PART1.Controllers
             }
             return View(ev);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
