@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVC_PART1.Filters;
 using MVC_PART1.Models;
 using MVC_PART1.Services;
 using System.Data;
@@ -8,7 +10,7 @@ namespace MVC_PART1.Controllers
 {
 
     //filter
-    [Roleauthorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin")]
     public class EventController : Controller
     {
         private readonly AppDbContext _appDbContext;
@@ -164,5 +166,9 @@ namespace MVC_PART1.Controllers
             }
             base.Dispose(disposing);
         }
+    }
+
+    internal class RoleAuthorizeAttributes : Attribute
+    {
     }
 }

@@ -7,15 +7,18 @@ using System.Text.Json.Nodes;
 
 namespace MVC_PART1.Filters
 {
-    public class RoleAuthorizeAttributes : AuthorizeAttribute, IAuthorizationFilter
+    public class RoleAuthorize : AuthorizeAttribute, IAuthorizationFilter
     {
 
 
-        private readonly string _role;
-        public RoleAuthorizeAttributes(string role)
+        private readonly string[] _role;
+        public RoleAuthorize(params string[] role)
         {
-            _role = role;    
+            _role = role;
         }
+
+       
+
       
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -23,10 +26,18 @@ namespace MVC_PART1.Filters
             var sessionobj = context.HttpContext.Session.GetString("logindetail");
             if (string.IsNullOrEmpty(sessionobj))
             {
-       context.Result = new RedirectToActionResult("Login", "Account", null);
+                context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
 
             var loginDetail = JsonConvert.DeserializeObject<LoginViewControl>(sessionobj);
-        }     }
+
+
+            if (!_role.Contains(loginDetail.Role))
+            {
+                
+                context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
+            }
+        }
+    }
 }

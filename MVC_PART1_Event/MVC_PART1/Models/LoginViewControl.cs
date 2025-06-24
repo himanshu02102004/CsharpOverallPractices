@@ -16,6 +16,18 @@ namespace MVC_PART1.Models
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public string Role { get; internal set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+
+        [Required]
+        public string Role { get;  set; }
+        public int UserId { get;  set; }
+        
+
+        // for new user
+        public string Name { get; set; }
     }
 }

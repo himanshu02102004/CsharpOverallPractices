@@ -18,12 +18,33 @@ public class AccountServices: IAccountServices
 
     public LoginViewControl Login(LoginViewControl model)
     {
-        throw new NotImplementedException();
+        var user = _appDbContext.Users.FirstOrDefault(u => u.UserName == model.UserName && u.Password == model.Password);
+
+        if (user != null)
+        {
+            return new LoginViewControl
+            {
+                UserName = user.UserName,
+                Role = user.Role,
+                UserId = user.ID
+            };
+        }
+
+        return null;
     }
+
+
+    public IQueryable<User> GetAllUsers()
+    {
+        return _appDbContext.Users.AsQueryable();
+    }
+
+
 
     public void Register(User user)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
+        Console.WriteLine("Registering user with role: " + user.Role);
         _appDbContext.Users.Add(user);
         _appDbContext.SaveChanges();
     }
