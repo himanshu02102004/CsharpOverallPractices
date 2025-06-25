@@ -5,6 +5,7 @@ using MVC_PART1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddScoped<IAccountServices, AccountServices>();
@@ -17,13 +18,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
-
-
+       options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // ? recommended
+        options.SlidingExpiration = true;                  // ? keeps session alive
     });
 
 builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
+// Middleware pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -33,13 +36,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
-
-app.UseSession();
-
-app.UseAuthentication();
-app.UseRouting();
+app.UseRouting();           // ? Correct order
+app.UseAuthentication();    // ? after routing
 app.UseAuthorization();
+app.UseSession();           // ? after auth
 
 app.MapControllerRoute(
     name: "default",

@@ -10,7 +10,7 @@ namespace MVC_PART1.Controllers
 {
 
     //filter
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User")]
     public class EventController : Controller
     {
         private readonly AppDbContext _appDbContext;

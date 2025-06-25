@@ -2,7 +2,7 @@
 
 namespace MVC_PART1.Models
 {
-    public class LoginViewControl
+    public class RegisterViewControl
     {
         [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
@@ -11,10 +11,14 @@ namespace MVC_PART1.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        // These are populated after login for session/claims
-        public string Role { get; set; }
+        [Required(ErrorMessage = "Full name is required")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
-        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Role is required")]
+        public string Role { get; set; }
     }
 }

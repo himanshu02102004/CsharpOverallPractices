@@ -47,21 +47,38 @@
     <!-- Buttons -->
     <div class="form-group mt-3 d-flex gap-2">
         <button type="submit" name="actiontype" value="Login" class="btn btn-primary">Login</button>
-        <button type="button" class="btn btn-success" onclick="showRegister()">Register</button>
-    </div>
-
-    <!-- Submit button for register (hidden initially) -->
-    <div id="registerSubmit" class="form-group mt-2" style="display:none;">
-        <button type="submit" name="actiontype" value="Register" class="btn btn-success">Create Account</button>
+        <button type="submit" name="actiontype" value="Register" class="btn btn-success" id="registerBtn">Register</button>
     </div>
 </form>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        function showRegister() {
-            document.getElementById("registerFields").style.display = "block";
-            document.getElementById("registerSubmit").style.display = "block";
+        let registerVisible = false;
+        document.getElementById("registerBtn").addEventListener("click", function () {
+            const regFields = document.getElementById("registerFields");
+
+            if (!registerVisible) {
+                regFields.style.display = "block";
+                this.type = "submit";
+                this.setAttribute("name", "actiontype");
+                this.setAttribute("value", "Register");
+                this.textContent = "Create Account";
+                registerVisible = true;
+            }
+        });
+
+        // ✅ Optional: Reset form after successful registration
+        @if (TempData["RegisterSuccess"] != null)
+        {
+            <text>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.getElementById("accountForm").reset();
+                        document.getElementById("registerFields").style.display = "none";
+                        document.getElementById("registerBtn").type = "button";
+                        document.getElementById("registerBtn").textContent = "Register";
+                    });
+            </text>
         }
     </script>
 }

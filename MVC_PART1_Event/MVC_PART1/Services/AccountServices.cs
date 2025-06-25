@@ -1,51 +1,53 @@
-﻿using MVC_PART1.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MVC_PART1.Models;
 
-namespace MVC_PART1.Services;
-
-public class AccountServices: IAccountServices
+namespace MVC_PART1.Services
 {
-
-    private readonly AppDbContext _appDbContext;
-    public AccountServices(AppDbContext appDbContext)
+    public class AccountServices :IAccountServices
     {
-        _appDbContext = appDbContext;
-    }
-    public bool Login(string username, string password)
-    {
-        var user = _appDbContext.Users.FirstOrDefault(u => u.UserName == username && u.Password == password);
-        return user != null;
-    }
+        private readonly AppDbContext _appDbContext;
 
-    public LoginViewControl Login(LoginViewControl model)
-    {
-        var user = _appDbContext.Users.FirstOrDefault(u => u.UserName == model.UserName && u.Password == model.Password);
-
-        if (user != null)
+        public AccountServices(AppDbContext appDbContext)
         {
-            return new LoginViewControl
-            {
-                UserName = user.UserName,
-                Role = user.Role,
-                UserId = user.ID
-            };
+            _appDbContext = appDbContext;
         }
 
-        return null;
-    }
+        // ✅ Used in controller Login action to verify credentials
+        public LoginViewControl Login(LoginViewControl model)
+        {
+            var user = _appDbContext.Users.FirstOrDefault(u =>
+                u.UserName == model.UserName && u.Password == model.Password);
 
+            if (user != null)
+            {
+                return new LoginViewControl
+                {
+                    UserName = user.UserName,
+                    Password = user.Password,
+                    Role = user.Role,
+                    Name = user.Name,
+                    Email = user.Email,
+                    UserId = user.ID
+                };
+            }
 
-    public IQueryable<User> GetAllUsers()
-    {
-        return _appDbContext.Users.AsQueryable();
-    }
+            return null;
+        }
 
+        // ✅ Used for checking duplicate username during registration
+        public IQueryable<User> GetAllUsers()
+        {
+            return _appDbContext.Users.AsQueryable();
+        }
 
+        // ✅ Used in controller Register action
+        public void Register(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
-    public void Register(User user)
-    {
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        Console.WriteLine("Registering user with role: " + user.Role);
-        _appDbContext.Users.Add(user);
-        _appDbContext.SaveChanges();
+            _appDbContext.Users.Add(user);
+            _appDbContext.SaveChanges();
+        }
     }
 }
+ 

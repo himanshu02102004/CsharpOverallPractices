@@ -25,87 +25,91 @@ namespace MVC_PART1.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewControl model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var userData = _accountService.Login(model); // Fetch user from DB
+
+            if (userData != null)
+            {
+                // ✅ Populate Claims for Authentication
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, userData.UserName),
+            new Claim(ClaimTypes.Role, userData.Role)
+        };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // ✅ Optional: Clear previous login if any
+                await HttpContext.SignOutAsync();
+
+                // ✅ Sign in with new identity
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
+                // ✅ Optional: Store session data
+                string sessionObj = JsonSerializer.Serialize(userData);
+                HttpContext.Session.SetString("logindetail", sessionObj);
+
+                // ✅ Redirect based on role
+                return RedirectToRoleBasedPage(userData);
+            }
+
+            // ❌ Invalid credentials
+            ModelState.AddModelError("", "Invalid username or password");
+            return View(model);
+        }
+
+
+
+
 
 
 
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewControl model, string actiontype)
+        public async Task<IActionResult> Register(RegisterViewControl model)
         {
             if (!ModelState.IsValid)
+                return View("Login", model); // reuse Login view
+
+            var exists = _accountService.GetAllUsers().Any(u => u.UserName == model.UserName);
+            if (exists)
             {
-                return View(model);
+                ModelState.AddModelError("", "Username already exists.");
+                return View("Login", model);
             }
 
-            if (actiontype == "Register")
+            var user = new User
             {
-                var existingUser = _accountService.GetAllUsers()
-                    .FirstOrDefault(u => u.UserName == model.UserName);
+                UserName = model.UserName,
+                Password = model.Password,
+                Name = model.Name,
+                Email = model.Email,
+                Role = model.Role
+            };
 
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError("", "Username already exists.");
-                    return View(model);
-                }
+            _accountService.Register(user);
 
-                // ✅ Create and register new user
-                var newUser = new User
-                {
-                    UserName = model.UserName,
-                    Password = model.Password,
-                    Name = model.Name,
-                    Role = model.Role,
-                    Email = model.Email // ✅ make sure this is collected from the form
-                };
+            // Log in the user
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Role, user.Role)
+    };
 
-                _accountService.Register(newUser);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync();
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
 
-                // ✅ Automatically log in the newly registered user
-                model.UserId = newUser.ID;
-
-                // Store in session
-                string sessionObj = JsonSerializer.Serialize(model);
-                HttpContext.Session.SetString("logindetail", sessionObj);
-
-                // Create auth cookie
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, model.UserName),
-            new Claim(ClaimTypes.Role, model.Role)
-        };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
-
-                return RedirectToRoleBasedPage(model);
-            }
-
-            // LOGIN section
-            LoginViewControl vm = _accountService.Login(model);
-            if (vm != null)
-            {
-                string sessionObj = JsonSerializer.Serialize(vm);
-                HttpContext.Session.SetString("logindetail", sessionObj);
-
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, vm.UserName),
-            new Claim(ClaimTypes.Role, vm.Role)
-        };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
-
-                return RedirectToRoleBasedPage(vm);
-            }
-
-            ModelState.AddModelError("", "Invalid username or password");
-            return View(model);
+            return RedirectToAction("Index", "Event");
         }
 
 
@@ -119,9 +123,15 @@ namespace MVC_PART1.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            //HttpContext.Session.Clear();
+            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //return RedirectToAction("Login");
+
+
+            HttpContext.Session.Clear(); // ✅ Clear session
+            await HttpContext.SignOutAsync(); // ✅ Clear auth cookie
+
+            return RedirectToAction("Login", "Account");
         }
 
 
@@ -133,7 +143,7 @@ namespace MVC_PART1.Controllers
             }
             else if (vm.Role == "User")
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Event");
             }
             else
             {
