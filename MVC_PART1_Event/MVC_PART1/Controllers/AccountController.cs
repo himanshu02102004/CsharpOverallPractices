@@ -26,91 +26,84 @@ namespace MVC_PART1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewControl model)
+        public async Task<IActionResult> Login(LoginRegisterWrapper wrapper, string actiontype)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var userData = _accountService.Login(model); // Fetch user from DB
-
-            if (userData != null)
+            if (actiontype == "Login")
             {
-                // ✅ Populate Claims for Authentication
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, userData.UserName),
-            new Claim(ClaimTypes.Role, userData.Role)
-        };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                // ✅ Optional: Clear previous login if any
-                await HttpContext.SignOutAsync();
-
-                // ✅ Sign in with new identity
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
-
-                // ✅ Optional: Store session data
-                string sessionObj = JsonSerializer.Serialize(userData);
-                HttpContext.Session.SetString("logindetail", sessionObj);
-
-                // ✅ Redirect based on role
-                return RedirectToRoleBasedPage(userData);
-            }
-
-            // ❌ Invalid credentials
-            ModelState.AddModelError("", "Invalid username or password");
-            return View(model);
-        }
-
-
-
-
-
-
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewControl model)
-        {
-            if (!ModelState.IsValid)
-                return View("Login", model); // reuse Login view
-
-            var exists = _accountService.GetAllUsers().Any(u => u.UserName == model.UserName);
-            if (exists)
+                var user = _accountService.Login(wrapper.Login);
+                if (user != null)
+                {
+                    var claims = new List<Claim>
             {
-                ModelState.AddModelError("", "Username already exists.");
-                return View("Login", model);
-            }
-
-            var user = new User
-            {
-                UserName = model.UserName,
-                Password = model.Password,
-                Name = model.Name,
-                Email = model.Email,
-                Role = model.Role
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
-            _accountService.Register(user);
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignOutAsync();
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(identity));
 
-            // Log in the user
-            var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.UserName),
-        new Claim(ClaimTypes.Role, user.Role)
-    };
+                    TempData["LoginMessage"] = "Successfully logged in!";
+                    return RedirectToAction("Index", "Event");
+                }
+                else
+                {
+                    // ❌ Failure: wrong password or user
+                    ModelState.AddModelError("Login.Password", "Invalid username or password.");
+                    return View(wrapper);
+                }
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync();
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+                
+            }
 
-            return RedirectToAction("Index", "Event");
+
+
+            else if (actiontype == "Register")
+            {
+                var exists = _accountService.GetAllUsers().Any(u => u.UserName == wrapper.Register.UserName);
+                if (exists)
+                {
+                    ModelState.AddModelError("Register.UserName", "Username already exists.");
+
+                    return View(wrapper);
+                }
+
+                var user = new User
+                {
+                    UserName = wrapper.Register.UserName,
+                    Password = wrapper.Register.Password,
+                    Name = wrapper.Register.Name,
+                    Email = wrapper.Register.Email,
+                    Role = wrapper.Register.Role
+                };
+
+                _accountService.Register(user);
+
+                // Auto-login
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignOutAsync();
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity));
+
+                TempData["RegisterSuccess"] = true;
+                return RedirectToAction("Index", "Event");
+            }
+
+            return View(wrapper);
         }
+
+
+
+
+
+
 
 
 
@@ -135,20 +128,15 @@ namespace MVC_PART1.Controllers
         }
 
 
-        private IActionResult RedirectToRoleBasedPage(LoginViewControl vm)
+        private IActionResult RedirectToRoleBasedPage(User user)
         {
-            if (vm.Role == "Admin")
+            if (user.Role == "Admin" || user.Role == "User")
             {
                 return RedirectToAction("Index", "Event");
             }
-            else if (vm.Role == "User")
-            {
-                return RedirectToAction("Index", "Event");
-            }
-            else
-            {
-                return View("Login");
-            }
+
+            return View("Login");
         }
+
     }
 }

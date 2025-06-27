@@ -36,11 +36,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();           // ? Correct order
-app.UseAuthentication();    // ? after routing
+app.UseRouting();           
+app.UseAuthentication();   
 app.UseAuthorization();
-app.UseSession();           // ? after auth
-
+app.UseSession();         
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");

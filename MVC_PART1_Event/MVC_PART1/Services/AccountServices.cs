@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_PART1.Models;
+using BCrypt.Net;
 
 namespace MVC_PART1.Services
 {
@@ -12,27 +13,20 @@ namespace MVC_PART1.Services
             _appDbContext = appDbContext;
         }
 
-        // ✅ Used in controller Login action to verify credentials
-        public LoginViewControl Login(LoginViewControl model)
-        {
-            var user = _appDbContext.Users.FirstOrDefault(u =>
-                u.UserName == model.UserName && u.Password == model.Password);
 
-            if (user != null)
+        public User Login(Login model)
+        {
+            var user = _appDbContext.Users.FirstOrDefault(u => u.UserName == model.UserName);
+
+            if (user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
             {
-                return new LoginViewControl
-                {
-                    UserName = user.UserName,
-                    Password = user.Password,
-                    Role = user.Role,
-                    Name = user.Name,
-                    Email = user.Email,
-                    UserId = user.ID
-                };
+                return user; // Successful login
             }
 
-            return null;
+            return null; // Login failed
         }
+
+
 
         // ✅ Used for checking duplicate username during registration
         public IQueryable<User> GetAllUsers()
@@ -44,6 +38,9 @@ namespace MVC_PART1.Services
         public void Register(User user)
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
+           
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             _appDbContext.Users.Add(user);
             _appDbContext.SaveChanges();

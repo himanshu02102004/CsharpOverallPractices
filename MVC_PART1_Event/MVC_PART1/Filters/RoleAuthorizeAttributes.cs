@@ -30,7 +30,7 @@ namespace MVC_PART1.Filters
                 return;
             }
 
-            var loginDetail = JsonConvert.DeserializeObject<LoginViewControl>(sessionobj);
+            var loginDetail = JsonConvert.DeserializeObject<Register>(sessionobj);
 
 
             if (!_role.Contains(loginDetail.Role))

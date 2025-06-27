@@ -9,7 +9,7 @@ namespace MVC_PART1.Services
     public interface IAccountServices
     {
   
-        LoginViewControl Login( LoginViewControl model);
+        User Login( Login model);
         IQueryable<User> GetAllUsers();
         void Register(User user);
         
