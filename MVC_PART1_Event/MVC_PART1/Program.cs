@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MVC_PART1.Filters;
 using MVC_PART1.Models;
 using MVC_PART1.Services;
 
@@ -7,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(Options => {
+    Options.Filters.Add<LogActionFilter>();
+
+});
+
 builder.Services.AddSession();
+
+
 builder.Services.AddScoped<IAccountServices, AccountServices>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -36,12 +44,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();           
+app.UseRouting();
+app.UseSession();
+
 app.UseAuthentication();   
 app.UseAuthorization();
-app.UseSession();         
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+pattern: "{controller=Account}/{action=Login}/{id?}");
+//pattern: "{controller=Home}/{action=Index}");
+
 
 app.Run();

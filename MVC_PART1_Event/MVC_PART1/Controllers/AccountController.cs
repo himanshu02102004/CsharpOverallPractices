@@ -10,6 +10,8 @@ using static MVC_PART1.Services.IAccountServices;
 
 namespace MVC_PART1.Controllers
 {
+
+  //  [LogActionFilter]
     public class AccountController : Controller
     {
         private readonly IAccountServices _accountService;
@@ -39,13 +41,13 @@ namespace MVC_PART1.Controllers
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignOutAsync();
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(identity));
 
                     TempData["LoginMessage"] = "Successfully logged in!";
-                    return RedirectToAction("Index", "Event");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -54,8 +56,30 @@ namespace MVC_PART1.Controllers
                     return View(wrapper);
                 }
 
-                
+
             }
+
+
+            //if (actiontype == "login")
+            //{
+            //   var user=_accountService.Login(wrapper.Login);
+            //   if(user != null)
+            //    {
+            //        var claims = new List<Claim> 
+            //        { 
+            //        new Claim(ClaimTypes.Name, user.UserName),
+            //        new Claim(ClaimTypes.Role, user.Role)
+            //     };
+
+            //        var Identity= new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //        var principal = new ClaimsPrincipal(Identity);
+
+
+            //    }
+
+
+
+            //}
 
 
 

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using MVC_PART1.Filters;
 using MVC_PART1.Models;
 
 namespace MVC_PART1.Controllers;
@@ -12,9 +13,12 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+    //   [ExceptionCheck]
 
-    public IActionResult Index()
+    [MvcAuthorization]
+    public ActionResult Index()
     {
+         //throw new NotImplementedException();
         return View();
     }
 
