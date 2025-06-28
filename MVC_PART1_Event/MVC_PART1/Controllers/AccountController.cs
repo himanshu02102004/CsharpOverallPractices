@@ -45,7 +45,7 @@ namespace MVC_PART1.Controllers
                         new ClaimsPrincipal(identity));
 
                     TempData["LoginMessage"] = "Successfully logged in!";
-                    return RedirectToAction("Index", "Event");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
