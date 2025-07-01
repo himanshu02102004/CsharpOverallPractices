@@ -145,6 +145,10 @@ namespace CRUDTASK_CODE.Controllers
             await usercontrext.SaveChangesAsync();
 
             return Ok("User Soft Deleted Successfully");
+
+           
+
+            
         }
     }
 }

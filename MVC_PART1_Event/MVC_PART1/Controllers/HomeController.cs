@@ -13,10 +13,12 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
-    [ExceptionCheck]
+    //   [ExceptionCheck]
+
+    [MvcAuthorization]
     public ActionResult Index()
     {
-        // throw new NotImplementedException();
+         //throw new NotImplementedException();
         return View();
     }
 
