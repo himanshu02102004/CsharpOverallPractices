@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace reviewtask1.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,7 +66,8 @@ namespace reviewtask1.Migrations
                     OrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerID = table.Column<int>(type: "int", nullable: false)
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,41 +78,23 @@ namespace reviewtask1.Migrations
                         principalTable: "customers",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderProduct",
-                columns: table => new
-                {
-                    OrderID = table.Column<int>(type: "int", nullable: false),
-                    ProductsProductID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderProduct", x => new { x.OrderID, x.ProductsProductID });
                     table.ForeignKey(
-                        name: "FK_OrderProduct_orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "orders",
-                        principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderProduct_products_ProductsProductID",
-                        column: x => x.ProductsProductID,
+                        name: "FK_orders_products_ProductID",
+                        column: x => x.ProductID,
                         principalTable: "products",
                         principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderProduct_ProductsProductID",
-                table: "OrderProduct",
-                column: "ProductsProductID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_orders_CustomerID",
                 table: "orders",
                 column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_ProductID",
+                table: "orders",
+                column: "ProductID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_products_categoryID",
@@ -123,16 +106,13 @@ namespace reviewtask1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderProduct");
-
-            migrationBuilder.DropTable(
                 name: "orders");
 
             migrationBuilder.DropTable(
-                name: "products");
+                name: "customers");
 
             migrationBuilder.DropTable(
-                name: "customers");
+                name: "products");
 
             migrationBuilder.DropTable(
                 name: "categories");

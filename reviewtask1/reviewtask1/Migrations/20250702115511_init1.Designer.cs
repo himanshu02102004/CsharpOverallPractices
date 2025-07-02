@@ -12,8 +12,8 @@ using reviewtask1.Model;
 namespace reviewtask1.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20250701051656_test")]
-    partial class test
+    [Migration("20250702115511_init1")]
+    partial class init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace reviewtask1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsProductID")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderID", "ProductsProductID");
-
-                    b.HasIndex("ProductsProductID");
-
-                    b.ToTable("OrderProduct");
-                });
 
             modelBuilder.Entity("reviewtask1.Model.Category", b =>
                 {
@@ -92,9 +77,14 @@ namespace reviewtask1.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
                     b.HasKey("OrderID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("ProductID");
 
                     b.ToTable("orders");
                 });
@@ -125,21 +115,6 @@ namespace reviewtask1.Migrations
                     b.ToTable("products");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.HasOne("reviewtask1.Model.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("reviewtask1.Model.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("reviewtask1.Model.Order", b =>
                 {
                     b.HasOne("reviewtask1.Model.Customer", "Customer")
@@ -148,7 +123,15 @@ namespace reviewtask1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("reviewtask1.Model.Product", "Products")
+                        .WithMany("orders")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("reviewtask1.Model.Product", b =>
@@ -170,6 +153,11 @@ namespace reviewtask1.Migrations
             modelBuilder.Entity("reviewtask1.Model.Customer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("reviewtask1.Model.Product", b =>
+                {
+                    b.Navigation("orders");
                 });
 #pragma warning restore 612, 618
         }

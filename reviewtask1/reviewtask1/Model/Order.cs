@@ -1,4 +1,6 @@
-﻿namespace reviewtask1.Model
+﻿using System.Text.Json.Serialization;
+
+namespace reviewtask1.Model
 {
     public class Order
     {
@@ -7,10 +9,12 @@
 
         public DateTime OrderDate { get; set; }
         public int CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public int ProductID { get; set; }
+        [JsonIgnore]
+        public Customer ? Customer { get; set; }
 
-       
-       public ICollection<Product> Products { get; set; }
+        [JsonIgnore]
+       public  Product ? Products { get; set; }
       
     }
 }

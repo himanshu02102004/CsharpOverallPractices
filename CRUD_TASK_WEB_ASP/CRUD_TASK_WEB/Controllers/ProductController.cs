@@ -39,9 +39,15 @@ namespace CRUDTASK_CODE.Controllers
 
 
         [HttpGet("getproduct")]
-        public async Task<ActionResult<List<Product>>> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productContext.Products.ToListAsync();
+            var products = await _productContext.Products.Select(X => new ProductDTO
+            {
+                PropName = X.PropName,
+                PropPrice = X.PropPrice,
+                CategoryId = X.CategoryId
+            }).
+                ToListAsync();
             return Ok(products);
         }
 

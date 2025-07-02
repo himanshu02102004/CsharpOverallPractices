@@ -15,14 +15,14 @@ namespace reviewtask1.Model
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
            
-            base.OnModelCreating(modelBuilder);
+        //    base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Order>()
-                .HasMany(o => o.Products)
-                .WithMany();
-        }
+        //    modelBuilder.Entity<Order>()
+        //        .HasMany(o => o.Products)
+        //        .WithMany();
+        //}
     }
 }
