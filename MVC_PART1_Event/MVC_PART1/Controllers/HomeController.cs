@@ -1,6 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MVC_PART1.Filters;
+//using MVC_PART1.Filters;
 using MVC_PART1.Models;
 
 namespace MVC_PART1.Controllers;
@@ -15,15 +16,52 @@ public class HomeController : Controller
     }
     //   [ExceptionCheck]
 
-    [MvcAuthorization]
-    public ActionResult Index()
+    //  [MvcAuthorization]
+    //[Authorize]
+    //public ActionResult Index()
+    //{
+    //     //throw new NotImplementedException();
+    //    return View();
+    //}
+
+    //[Authorize]
+    //public IActionResult Index()
+    //{
+    //    return View();
+    //}
+
+    // [Authorize]
+
+
+
+    [Authorize]
+    public IActionResult Index()
     {
-         //throw new NotImplementedException();
+        Console.WriteLine("🔐 IsAuthenticated: " + User.Identity.IsAuthenticated);
+        Console.WriteLine("👤 Name: " + User.Identity.Name);
+
+        foreach (var claim in User.Claims)
+        {
+            Console.WriteLine($"📛 Claim: {claim.Type} = {claim.Value}");
+        }
+
         return View();
     }
 
 
-   
+
+
+
+
+    [Authorize]
+    [HttpGet("api/securedata")]
+    public IActionResult GetSecureData()
+    {
+        return Ok(new { message = "You are authenticated!" });
+    }
+
+
+
     public IActionResult Privacy()
     {
         return View();

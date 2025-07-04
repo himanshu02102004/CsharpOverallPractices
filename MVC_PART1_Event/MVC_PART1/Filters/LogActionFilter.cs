@@ -7,6 +7,8 @@ public class LogActionFilter : IActionFilter
 {
     private readonly string _logFilePath = "Logs/action_logs.txt";
 
+    private static readonly object _fileLock = new object();
+
     public void OnActionExecuting(ActionExecutingContext context)
     {
         string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +37,10 @@ public class LogActionFilter : IActionFilter
         {
             Directory.CreateDirectory(logDir);
         }
+        lock (_fileLock)
+        {
 
-        File.AppendAllText(_logFilePath, log + Environment.NewLine);
+            File.AppendAllText(_logFilePath, log + Environment.NewLine);
+        }
     }
 }
