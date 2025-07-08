@@ -7,6 +7,7 @@ using MVC_PART1.Services;
 using MVC_PART1;
 using System.Text;
 using MVC_PART1.Middleware;
+using MVC_PART1.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,11 @@ builder.Services.AddScoped<IAccountServices, AccountServices>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AuthorizeSessionAttribute>();
+});
+
 
 
 ////builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -52,8 +58,16 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
+
+builder.Services.AddAuthorization();
+var app = builder.Build();
 
 
 if (!app.Environment.IsDevelopment())
@@ -62,10 +76,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 
-app.UseRouting();
+
 
 //app.Use(async (context, next) =>
 //{
@@ -82,19 +94,21 @@ app.UseRouting();
 //app.UseMiddleware<TokenMiddleware>();
 
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
 
-var app = builder.Build();
+
+
+
+
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseSession();
 
 
-app.UseSession();
+
 
 
 app.UseSession();

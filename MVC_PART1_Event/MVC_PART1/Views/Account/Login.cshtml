@@ -6,7 +6,15 @@
 
 
 
+@if (TempData["LoginMessage"] != null)
+{
+    <p style="color: green">@TempData["LoginMessage"]</p>
+}
 
+@if (TempData["LoginError"] != null)
+{
+    <p style="color:red;">@TempData["LoginError"]</p>
+}
 
 
 @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })

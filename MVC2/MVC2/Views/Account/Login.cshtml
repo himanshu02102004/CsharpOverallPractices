@@ -1,0 +1,9 @@
+﻿@model MVC2.Models.User
+
+
+<form asp-action="Login" method="post">
+    <input asp-for="Username" placeholder="Username" />
+    <input asp-for="Password" placeholder="Password" type="password" />
+    <button type="submit">Login</button>
+    <p style="color:red">@ViewBag.Message</p>
+</form>

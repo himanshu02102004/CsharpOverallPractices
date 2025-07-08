@@ -1,31 +1,30 @@
 ﻿@using System.Security.Claims
 
-@{
-    var isAuthenticated = User.Identity.IsAuthenticated;
-    var userName = User.Identity?.Name;
-    var role = User.FindFirst(ClaimTypes.Role)?.Value;
-
-
-
-}
-
-
-
-
-
-@* /// JWT GENERATED TOKEN *@
 @* @{ *@
-@*     var token = Context.Session.GetString("JWTToken"); *@
+@*     var isAuthenticated = User.Identity.IsAuthenticated; *@
+@*     var userName = User.Identity?.Name; *@
+@*     var role = User.FindFirst(ClaimTypes.Role)?.Value; *@
+
+
+
 @* } *@
 
-@* @if (!string.IsNullOrEmpty(token)) *@
-@* { *@
-@*     <div style="word-break: break-all;">Token: @token</div> *@
-@* } *@
-@* else *@
-@* { *@
-@*     <div>No token found in session.</div> *@
-@* } *@
+
+
+
+
+/// JWT GENERATED TOKEN
+@{     var token = Context.Session.GetString("JWTToken"); 
+     } 
+
+  @if (!string.IsNullOrEmpty(token))  
+  {  
+     <div style="word-break: break-all;">Token: @token</div>  
+  }  
+ else  
+  {  
+  <div>No token found in session.</div>  
+  } 
 
 
 

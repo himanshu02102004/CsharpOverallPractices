@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVC_PART1.Filters;
+
 //using MVC_PART1.Filters;
 using MVC_PART1.Models;
 
@@ -14,6 +17,8 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+
+
     //   [ExceptionCheck]
 
     //  [MvcAuthorization]
@@ -34,7 +39,7 @@ public class HomeController : Controller
 
 
 
-    [Authorize]
+    [AuthorizeSession]
     public IActionResult Index()
     {
         Console.WriteLine("🔐 IsAuthenticated: " + User.Identity.IsAuthenticated);
@@ -53,12 +58,12 @@ public class HomeController : Controller
 
 
 
-    [Authorize]
-    [HttpGet("api/securedata")]
-    public IActionResult GetSecureData()
-    {
-        return Ok(new { message = "You are authenticated!" });
-    }
+    //[Authorize]
+    //[HttpGet("api/securedata")]
+    //public IActionResult GetSecureData()
+    //{
+    //    return Ok(new { message = "You are authenticated!" });
+    //}
 
 
 

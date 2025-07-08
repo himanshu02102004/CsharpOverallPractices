@@ -1,0 +1,11 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Home Page";
+    var token = HttpContextAccessor.HttpContext.Session.GetString("JWTToken");
+}
+
+
+
+<h2>Welcome to Home Page @token</h2>
+<a asp-controller="Account" asp-action="Logout">Logout</a>
