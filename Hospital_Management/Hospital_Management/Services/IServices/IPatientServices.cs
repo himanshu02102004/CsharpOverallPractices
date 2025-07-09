@@ -5,10 +5,12 @@ namespace Hospital_Management.Services.IServices
     public interface IPatientServices
     {
 
-        Task<Patient> GetAllPatient { get; set; }
-        Task<Patient> GetPatientById { get; set; }
-        Task<Patient> AddPatient { get; set; }
-        Task<Patient> UpdatePatient { get; set; }
-        Task<Patient> DeletePatient { get; set; }
+        public Task<List<Patient>> GetAllPatient ();
+        public  Task<Patient> GetPatientById (int id );
+        public Task<Patient> AddPatient(Patient patient);
+        public  Task<Patient> UpdatePatient ( Patient patient);
+       public Task<Patient> DeletePatient (Patient patient);
+       public Task<bool> PartialUpdate(Patient updatepatient);
+       public Task<IEnumerable<Patient>> SearchPatient(string query);
     }
 }

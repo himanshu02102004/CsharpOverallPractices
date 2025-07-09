@@ -10,8 +10,8 @@
 
 
 
-        public DateTime DateTime { get; set; }
-        public string status { get; set; }
+        public DateTime Appointment_Date { get; set; }
+        public string  status { get; set; }
 
         public Patient patient { get; set; }
 

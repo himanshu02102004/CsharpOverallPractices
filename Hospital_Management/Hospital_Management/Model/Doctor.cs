@@ -13,8 +13,9 @@ namespace Hospital_Management.Model
       
 
         public int availability_slot { get; set; }
+        public bool IsonLeave { get; set; }
 
-        [ForeignKey(nameof(Doctor_Id))]
+        
         public int Department_Id { get; set; }
         public Department Department { get; set; }
 
