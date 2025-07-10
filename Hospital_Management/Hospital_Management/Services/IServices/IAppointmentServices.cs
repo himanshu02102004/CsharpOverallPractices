@@ -1,4 +1,5 @@
-﻿using Hospital_Management.Model;
+﻿
+using Hospital_Management.Model;
 
 namespace Hospital_Management.Services.IServices
 {
@@ -15,7 +16,9 @@ namespace Hospital_Management.Services.IServices
         public Task<IEnumerable<Appointment>> GetAppointmentbyDoctorandDate(int doctor_id,  DateTime date);
 
         public Task<IEnumerable<Appointment>> GetDoctorSchedule(int doctor_id, DateTime date);
-        public Task<IEnumerable<Appointment>> GetAvailablesLotsAsync(int Doctor_id,DateTime date);
+        public Task<List<DateTime>> GetAvailablesLotsAsync(int Doctor_id,DateTime date);
+
+
 
 
 
