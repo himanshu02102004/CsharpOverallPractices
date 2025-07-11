@@ -1,8 +1,10 @@
-﻿namespace Hospital_Management.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hospital_Management.Model
 {
     public class User
     {
-
+        [Key]
         public int User_Id{ get; set; }
         public string User_Name { get; set; }
  

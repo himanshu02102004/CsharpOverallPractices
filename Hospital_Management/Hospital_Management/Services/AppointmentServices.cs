@@ -11,12 +11,12 @@ namespace Hospital_Management.Services
     {
         private readonly Apicontext _apiconext;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IEmailSender _emailservices;
-        public AppointmentServices(Apicontext apicontext,IHttpContextAccessor httpContextAccessor, IEmailSender emailSender)
+        private readonly IEmailServices _emailservices;
+        public AppointmentServices(Apicontext apicontext,IHttpContextAccessor httpContextAccessor, IEmailServices emailServices)
         {
             _apiconext = apicontext;
             _httpContextAccessor = httpContextAccessor;
-            _emailservices = emailSender;
+            _emailservices = emailServices;
         }
 
 

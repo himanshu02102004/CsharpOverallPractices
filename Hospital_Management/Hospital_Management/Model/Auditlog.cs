@@ -1,8 +1,10 @@
-﻿namespace Hospital_Management.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hospital_Management.Model
 {
     public class Auditlog
     {
-
+        [Key]
         public int  Id { get; set; }
         public string Action {  get; set; }
         public string Performedby { get; set; }

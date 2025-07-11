@@ -1,4 +1,4 @@
-﻿using Hospital_Management.Database;
+﻿  using Hospital_Management.Database;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -59,14 +59,14 @@ namespace Hospital_Management.Services
         }
 
 
-        public async Task<Patient> DeletePatient(Patient patient) { 
-           var pat= await apicontext.Patients.FindAsync(patient.Patient_id);
+        public async Task<Patient> DeletePatient(int id) { 
+           var pat= await apicontext.Patients.FindAsync(id);
             if(pat == null)
             {
                 return null;
             }
 
-            apicontext.Patients.Remove(patient);
+            apicontext.Patients.Remove(pat);
             await apicontext.SaveChangesAsync();
             return pat;
 

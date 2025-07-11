@@ -12,7 +12,7 @@ namespace Hospital_Management.Model
         public string Doctor_specialization { get; set; }
       
 
-        public int availability_slot { get; set; }
+        public string availability_slot { get; set; }
         public bool IsonLeave { get; set; }
 
         

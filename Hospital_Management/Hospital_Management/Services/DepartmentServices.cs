@@ -45,14 +45,14 @@ namespace Hospital_Management.Services
             return department;
         }
 
-        public async Task<bool> DeleteDepartment(Department department)
+        public async Task<bool> DeleteDepartment(int id)
         {
-            var found = await _apicontext.departments.FindAsync(department.Department_Id);
+            var found = await _apicontext.departments.FindAsync(id);
             if(found == null)
             {
                 return false;
             }
-            _apicontext.departments.Remove(department);
+            _apicontext.departments.Remove(found);
             await _apicontext.SaveChangesAsync();
             return true;
 
