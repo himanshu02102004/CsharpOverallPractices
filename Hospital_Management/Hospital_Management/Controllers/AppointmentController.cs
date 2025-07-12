@@ -3,6 +3,7 @@ using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit.Tnef;
 
 namespace Hospital_Management.Controllers
 {
@@ -51,8 +52,30 @@ namespace Hospital_Management.Controllers
            
 
             var appoint= await _appointmentServices.ResheduledAppointment(id, dateTime);
+            if (!appoint) return NotFound("apointment is not found");
+            return Ok("Appointment resheduled");
+
 
         }
+
+        [HttpGet("doctor/{doctorID}")]
+
+        public async Task<IActionResult> getdoctorschedule( int doc_id,DateTime dateTime)
+        {
+
+            var schedule= await _appointmentServices.GetDoctorSchedule(doc_id, dateTime);
+            return Ok(schedule);
+        }
+
+
+        [HttpGet("doctor/{doctorid}/available-slot")]
+
+        public async Task<IActionResult> GetAvailableslot(int doctorid, DateTime date)
+        {
+            var slots= await _appointmentServices.GetAvailablesLotsAsync(doctorid,date);
+            return Ok(slots);
+        }
+
 
 
 

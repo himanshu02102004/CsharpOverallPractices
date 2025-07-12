@@ -6,7 +6,7 @@ namespace Hospital_Management.Services.IServices
     public interface IAppointmentServices
     {
 
-      public Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
+      public Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(int doctorid);
         public Task<Appointment> GetAppointmentbyID(int id);
         public Task<Appointment> BookAppointment(Appointment appointment);
         public Task<bool> CancelAppointmeAsync(int id);
