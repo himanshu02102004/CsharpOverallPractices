@@ -37,7 +37,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPost("create department")]
-         public async Task<IActionResult> create( Department depart )      
+         public async Task<IActionResult> create(CreateDepartment depart )      
         {
             var creat = await _departmentServices.CreateDepartment(depart);
             return CreatedAtAction(nameof(Getbyidepartmentid),new {id= creat.Department_Id},create);

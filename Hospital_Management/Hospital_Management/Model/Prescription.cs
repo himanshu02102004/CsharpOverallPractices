@@ -17,7 +17,7 @@ namespace Hospital_Management.Model
         public int Doctor_Id { get; set; }
 
 
-        public Doctor Doctor { get; set; }
+     
 
 
 

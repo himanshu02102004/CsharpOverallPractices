@@ -18,6 +18,16 @@ namespace Hospital_Management.Database
         public DbSet<EmailSetting> emailSettings { get; set; }
         public DbSet<Prescription> prescriptions { get; set; }
 
-        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Prescription)
+                .WithOne(p => p.appointment)
+                .HasForeignKey<Prescription>(p => p.Appoitment_Id)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
+
+
     }
 }

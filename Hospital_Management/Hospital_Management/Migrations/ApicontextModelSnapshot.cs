@@ -24,11 +24,11 @@ namespace Hospital_Management.Migrations
 
             modelBuilder.Entity("Hospital_Management.Model.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Appoitment_Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Appoitment_Id"));
 
                     b.Property<DateTime>("Appointment_Date")
                         .HasColumnType("datetime2");
@@ -49,7 +49,7 @@ namespace Hospital_Management.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Appoitment_Id");
 
                     b.HasIndex("Doctor_Id1");
 
@@ -102,7 +102,12 @@ namespace Hospital_Management.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("appointmentAppoitment_Id")
+                        .HasColumnType("int");
+
                     b.HasKey("Department_Id");
+
+                    b.HasIndex("appointmentAppoitment_Id");
 
                     b.ToTable("departments");
                 });
@@ -136,8 +141,9 @@ namespace Hospital_Management.Migrations
                     b.Property<bool>("IsonLeave")
                         .HasColumnType("bit");
 
-                    b.Property<int>("availability_slot")
-                        .HasColumnType("int");
+                    b.Property<string>("availability_slot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Doctor_Id");
 
@@ -159,9 +165,8 @@ namespace Hospital_Management.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SmptPort")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SmptPort")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -209,6 +214,9 @@ namespace Hospital_Management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Appoitment_Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("Doctor_Id")
                         .HasColumnType("int");
 
@@ -229,6 +237,9 @@ namespace Hospital_Management.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Appoitment_Id")
+                        .IsUnique();
 
                     b.HasIndex("Doctor_Id1");
 
@@ -281,6 +292,17 @@ namespace Hospital_Management.Migrations
                     b.Navigation("patient");
                 });
 
+            modelBuilder.Entity("Hospital_Management.Model.Department", b =>
+                {
+                    b.HasOne("Hospital_Management.Model.Appointment", "appointment")
+                        .WithMany()
+                        .HasForeignKey("appointmentAppoitment_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("appointment");
+                });
+
             modelBuilder.Entity("Hospital_Management.Model.Doctor", b =>
                 {
                     b.HasOne("Hospital_Management.Model.Department", "Department")
@@ -294,6 +316,12 @@ namespace Hospital_Management.Migrations
 
             modelBuilder.Entity("Hospital_Management.Model.Prescription", b =>
                 {
+                    b.HasOne("Hospital_Management.Model.Appointment", "appointment")
+                        .WithOne("Prescription")
+                        .HasForeignKey("Hospital_Management.Model.Prescription", "Appoitment_Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Hospital_Management.Model.Doctor", "doctor")
                         .WithMany()
                         .HasForeignKey("Doctor_Id1")
@@ -308,7 +336,15 @@ namespace Hospital_Management.Migrations
 
                     b.Navigation("Patient");
 
+                    b.Navigation("appointment");
+
                     b.Navigation("doctor");
+                });
+
+            modelBuilder.Entity("Hospital_Management.Model.Appointment", b =>
+                {
+                    b.Navigation("Prescription")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hospital_Management.Model.Department", b =>

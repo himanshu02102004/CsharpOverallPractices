@@ -6,10 +6,13 @@ namespace Hospital_Management.Model
     {
         [Key]
         public int Department_Id { get; set; }
-        public string Department_Name { get; set; }
-        public string Department_Description { get; set; }  
-
         
+        public string Department_Name { get; set; }
+        public string Department_Description { get; set; }
+
+
+
+        public Appointment appointment { get; set; }
         public ICollection<Doctor> Doctor { get; set; }
 
     }

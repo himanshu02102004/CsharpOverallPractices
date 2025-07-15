@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Services
 {
-    public class AppointmentServices : IAppointmentServices
+    public class AppointmentServices : IAppointmentServices 
     {
         private readonly Apicontext _apiconext;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -20,6 +20,8 @@ namespace Hospital_Management.Services
         }
 
 
+
+   
 
 
 
@@ -44,7 +46,9 @@ namespace Hospital_Management.Services
 
 
         }
-        public async Task<Appointment> BookAppointment(Appointment appointment)
+
+
+        public async Task<Appointment> ? BookAppointment(Appointment appointment)
         {
 
             /// doctor availabe check
@@ -52,7 +56,7 @@ namespace Hospital_Management.Services
             if (docavail == null || docavail.IsonLeave) return null;
 
 
-            var slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, appointment.Appointment_Date.Date);
+          var slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, appointment.Appointment_Date.Date);
             if (slots.Count == 0)
 
             {
@@ -120,6 +124,9 @@ namespace Hospital_Management.Services
 
 
         }
+
+
+
 
         public async Task<bool> CancelAppointmeAsync(int id)
         {
@@ -227,5 +234,7 @@ namespace Hospital_Management.Services
 
 
         }
+
+        
     }
 }

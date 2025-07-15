@@ -30,7 +30,7 @@ namespace Hospital_Management.Services
 
         public async Task<Doctor> AddDoctor(Doctor doctor)
         {
-           _apicontext.doctors.AddAsync(doctor);
+           await _apicontext.doctors.AddAsync(doctor);
             await _apicontext.SaveChangesAsync();
             return doctor;
         }

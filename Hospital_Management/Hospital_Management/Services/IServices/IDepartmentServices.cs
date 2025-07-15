@@ -1,4 +1,5 @@
-﻿using Hospital_Management.Model;
+﻿using Hospital_Management.DTO;
+using Hospital_Management.Model;
 
 namespace Hospital_Management.Services.IServices
 {
@@ -8,7 +9,7 @@ namespace Hospital_Management.Services.IServices
         public Task<IEnumerable<Department>> GetAlldepartment();
 
         public Task<Department> GetDepartmentbyID(int id);
-        public Task<Department> CreateDepartment(Department department);
+        public Task<Department> CreateDepartment(CreateDepartment department);
         public Task<bool>  UpdateDepartment(Department department);
         public Task<bool> DeleteDepartment(int id);
 

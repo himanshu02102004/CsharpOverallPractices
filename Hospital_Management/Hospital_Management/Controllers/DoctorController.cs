@@ -55,7 +55,7 @@ namespace Hospital_Management.Controllers
             };
 
 
-            _doctorService.AddDoctor(Docs);
+           await  _doctorService.AddDoctor(Docs);
             return Ok(Docs);
         }
 
