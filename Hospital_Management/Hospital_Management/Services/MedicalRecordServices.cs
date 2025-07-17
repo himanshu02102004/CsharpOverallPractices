@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Services
 {
-    public class PrescriptionServices : IPrescriptionServices
+    public class MedicalrecordServices : IMedicalRecordServices
     {
 
         private readonly Apicontext _apicontext;
 
-        public PrescriptionServices( Apicontext apicontext)
+        public MedicalrecordServices( Apicontext apicontext)
         {
          _apicontext = apicontext;   
         }
@@ -18,7 +18,7 @@ namespace Hospital_Management.Services
 
 
 
-        public async Task<IEnumerable<Prescription>> GetPrescriptionListAsync()
+        public async Task<IEnumerable<MedicalRecord>> GetPrescriptionListAsync()
         {
             return await _apicontext.prescriptions
                       .Include(r => r.Patient)
@@ -27,7 +27,7 @@ namespace Hospital_Management.Services
         }
 
 
-        public async Task<Prescription> GetPrescriptionByIdAsync(int id)
+        public async Task<MedicalRecord> GetPrescriptionByIdAsync(int id)
         {
             return await _apicontext.prescriptions
                     .Include(r => r.Patient)
@@ -39,7 +39,7 @@ namespace Hospital_Management.Services
 
 
 
-        public async Task<Prescription> AddAsync(Prescription prescription)
+        public async Task<MedicalRecord> AddAsync(MedicalRecord prescription)
         {
              _apicontext.AddAsync(prescription);
             await _apicontext.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace Hospital_Management.Services
 
         }
 
-        public async Task<IEnumerable<Prescription>> GetbyPatientid(int PatientId)
+        public async Task<IEnumerable<MedicalRecord>> GetbyPatientid(int PatientId)
         {
             return await _apicontext.prescriptions
                     .Include(r => r.Patient_id == PatientId)

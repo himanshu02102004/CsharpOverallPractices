@@ -78,3 +78,25 @@
 ////        }
 ////    }
 ////}
+///
+
+
+
+//////////  PALINDROME ORIGINAL SAVE 
+//public class Solution
+//{
+//    public bool IsPalindrome(int x)
+//    {
+//        int rev = 0;
+//        int org = x;
+//        while (x > 0)
+//        {
+//            int dev = x % 10;
+//            rev = rev * 10 + dev;
+//            x = x / 10;
+
+
+//        }
+//        return rev == org;
+//    }
+//}

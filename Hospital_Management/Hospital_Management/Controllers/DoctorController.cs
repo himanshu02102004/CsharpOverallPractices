@@ -1,8 +1,10 @@
 ﻿using Hospital_Management.DTO;
 using Hospital_Management.Model;
+using Hospital_Management.Models;
 using Hospital_Management.Services;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Management.Controllers
@@ -25,12 +27,31 @@ namespace Hospital_Management.Controllers
         {
             var doc = await _doctorService.GetallDoctor();
             return Ok(doc);
+
+
+        }
+        [HttpGet("schedules")]
+        public async Task<IActionResult> GetSchedules()
+        {
+            var schedules = await _doctorService.GetAllSchedules();
+
+            var scheduleDtos = schedules.Select(s => new CreateDoctorScheduleDto
+            {
+                Doctor_Id = s.Doctor_Id,
+                DayOfWeek = s.DayOfWeek,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsAvailable = s.IsAvailable
+            }).ToList();
+
+            return Ok(scheduleDtos);
         }
 
 
 
 
-        [HttpGet ("id")]
+
+        [HttpGet("id")]
         public async Task<IActionResult> Getbyid(int id)
         {
             var docs= await _doctorService.GetDoctorbyid(id);
@@ -39,25 +60,48 @@ namespace Hospital_Management.Controllers
 
 
 
+
         [HttpPost]
-
-        public async Task <IActionResult> Add(CreateDoctorDto dto)
+        public async Task<IActionResult> AddDoctor([FromBody] CreateDoctorDto dto)
         {
-
-            var Docs = new Doctor
+            var doctor = new Doctor
             {
-                Doctor_Name= dto.Name,
-                Doctor_Description= dto.Description,
-                Doctor_specialization=dto.specialization,
-                availability_slot= dto.availabiity,
-                IsonLeave=dto.IsonLeave
+                Doctor_Name = dto.Name,
+                Doctor_Description = dto.Description,
+                Doctor_specialization = dto.specialization,
+                 Doctor_Availabiity= dto.availabiity,
+                IsonLeave = dto.IsonLeave,
+                Department_Id = dto.Department_Id
+            };
 
+            var createdDoctor = await _doctorService.AddDoctor(doctor);
+
+            return Ok(createdDoctor);
+        }
+
+
+
+
+
+
+        [HttpPost("schedules")]
+            public async Task <IActionResult> Add(CreateDoctorScheduleDto dto)
+            {
+
+            var sch = new DoctorSchedule
+            {
+                Doctor_Id = dto.Doctor_Id,
+               DayOfWeek=dto.DayOfWeek,
+                StartTime=dto.StartTime,
+               EndTime= dto.EndTime,
+               IsAvailable = true,
+                CreatedAt = DateTime.Now
             };
 
 
-           await  _doctorService.AddDoctor(Docs);
-            return Ok(Docs);
-        }
+            await _doctorService.AddDoctorSchedule(sch);
+            return Ok(sch);
+            }
 
 
 
@@ -81,18 +125,18 @@ namespace Hospital_Management.Controllers
         {
             var delete= await _doctorService.DeleteDoctor(id);
             if(!delete) return NotFound();
-            return NoContent();
+            return Ok("delete successfuly");
 
         }
 
-        [HttpPatch]
+        [HttpPatch("{id}/isonleave")]
 
         public async Task<IActionResult> Partialupdate(int id, bool IsonLeave)
         {
 
             var partial= await _doctorService.Markonleave(id, IsonLeave);
             if (!partial) return NotFound();
-            return NotFound();
+            return Ok("partial update successfully");
            
         }
        

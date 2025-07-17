@@ -19,7 +19,7 @@ namespace Hospital_Management.Model
 
         
 
-        public Prescription Prescription { get; set; }
+     
         public Patient patient { get; set; }
 
         public Doctor Doctor { get; set; }

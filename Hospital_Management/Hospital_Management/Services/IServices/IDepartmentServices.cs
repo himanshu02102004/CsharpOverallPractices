@@ -10,7 +10,7 @@ namespace Hospital_Management.Services.IServices
 
         public Task<Department> GetDepartmentbyID(int id);
         public Task<Department> CreateDepartment(CreateDepartment department);
-        public Task<bool>  UpdateDepartment(Department department);
+        public Task<bool>  UpdateDepartment(int id, UpdateDepartmentDTO department);
         public Task<bool> DeleteDepartment(int id);
 
 

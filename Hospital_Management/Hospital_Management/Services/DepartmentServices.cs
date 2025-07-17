@@ -3,6 +3,7 @@ using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 
@@ -35,11 +36,11 @@ namespace Hospital_Management.Services
       
 
 
-        public async Task<Department> CreateDepartment(CreateDepartment create)
+        public async Task<Department> CreateDepartment( CreateDepartment create)
         {
             var dep = new Department
             {
-                Department_Id = create.Department_id,
+               // Department_Id = create.Department_id,
                 Department_Name=create.Department_name,
                 Department_Description=create.Department_description
 
@@ -64,9 +65,9 @@ namespace Hospital_Management.Services
         }
 
        
-        public async Task<bool> UpdateDepartment(Department department)
+        public async Task<bool> UpdateDepartment(int id, UpdateDepartmentDTO department )
         {
-            var exist = await _apicontext.departments.FindAsync(department.Department_Id);
+            var exist = await _apicontext.departments.FindAsync(id);
                 if(exist == null)   
                 { return false; }
             exist.Department_Name = department.Department_Name;

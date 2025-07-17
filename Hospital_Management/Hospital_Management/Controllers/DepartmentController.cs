@@ -37,20 +37,24 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPost("create department")]
-         public async Task<IActionResult> create(CreateDepartment depart )      
+        public async Task<IActionResult> create(CreateDepartment depart)
         {
             var creat = await _departmentServices.CreateDepartment(depart);
-            return CreatedAtAction(nameof(Getbyidepartmentid),new {id= creat.Department_Id},create);
+            return CreatedAtAction(nameof(Getbyidepartmentid), new { id = creat.Department_Id }, creat); // ✅ fixed here
         }
 
 
+
+
+
+
         [HttpPut("id")]
-        public async Task<IActionResult> update(int id, Department depart)
+        public async Task<IActionResult> update(int id, [FromBody] UpdateDepartmentDTO depart)
         {
-            if (id != depart.Department_Id) return BadRequest(" id is mismatached");
-            var update = await _departmentServices.UpdateDepartment(depart);
-            if (!update) return NotFound();
-            return NoContent();
+         
+            var update = await _departmentServices.UpdateDepartment(id,depart);
+            if (!update) return NotFound(new {message ="Department not found"});
+            return Ok(new { message = "Department updated successfully." });
         }
 
 
@@ -59,7 +63,7 @@ namespace Hospital_Management.Controllers
         {
             var delete = await _departmentServices.DeleteDepartment(id);
             if(!delete) return NotFound();  
-            return Ok(delete);
+            return Ok("delete successfully ");
 
         }
 

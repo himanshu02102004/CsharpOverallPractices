@@ -1,5 +1,6 @@
 ﻿using Hospital_Management.Database;
 using Hospital_Management.Model;
+using Hospital_Management.Models;
 using Hospital_Management.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +18,24 @@ namespace Hospital_Management.Services
 
         public async Task<IEnumerable<Doctor>> GetallDoctor()
         {
-            return await _apicontext.doctors.Include(e => e.Department).ToListAsync();
+            var doctors = await _apicontext.doctors
+       .Include(d => d.Department)
+       .ToListAsync();
+
+            return doctors;
+
         }
+
+        public async Task<List<DoctorSchedule>> GetAllSchedules()
+        {
+            return await _apicontext.doctorSchedules.ToListAsync();
+        }
+
+
+
+
+
+
 
         public async Task<Doctor> GetDoctorbyid(int id)
         {
@@ -30,11 +47,20 @@ namespace Hospital_Management.Services
 
         public async Task<Doctor> AddDoctor(Doctor doctor)
         {
-           await _apicontext.doctors.AddAsync(doctor);
+            await _apicontext.doctors.AddAsync(doctor);
             await _apicontext.SaveChangesAsync();
             return doctor;
         }
 
+
+
+
+        public async Task<DoctorSchedule> AddDoctorSchedule(DoctorSchedule schedule)
+        {
+            await _apicontext.doctorSchedules.AddAsync(schedule);
+            await _apicontext.SaveChangesAsync();
+            return schedule;
+        }
 
 
 

@@ -1,4 +1,6 @@
-﻿using Hospital_Management.Model;
+﻿using Hospital_Management.Configuration;
+using Hospital_Management.Model;
+using Hospital_Management.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Database
@@ -13,21 +15,21 @@ namespace Hospital_Management.Database
         public DbSet<Doctor> doctors { get; set; }
         public DbSet<Department> departments { get; set; }
         public DbSet<Appointment> appointments { get; set; }
-        public DbSet<Auditlog>  Auditlogs { get; set; }
-      //  public DbSet<DataInitializers>? DataInitializers { get; set; }
+        public DbSet<Auditlog> Auditlogs { get; set; }
+        //  public DbSet<DataInitializers>? DataInitializers { get; set; }
         public DbSet<EmailSetting> emailSettings { get; set; }
-        public DbSet<Prescription> prescriptions { get; set; }
+        public DbSet<MedicalRecord> prescriptions { get; set; }
+        public DbSet<DoctorSchedule> doctorSchedules { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.Prescription)
-                .WithOne(p => p.appointment)
-                .HasForeignKey<Prescription>(p => p.Appoitment_Id)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+            modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
+
+
+         
+
         }
-
-
-
     }
 }

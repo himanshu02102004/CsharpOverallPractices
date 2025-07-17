@@ -1,4 +1,5 @@
 ﻿  using Hospital_Management.Database;
+using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -40,8 +41,8 @@ namespace Hospital_Management.Services
             
 
         }
-        public async Task<Patient> UpdatePatient (Patient patient){
-            var update = await apicontext.Patients.FindAsync(patient.Patient_id);
+        public async Task<Patient> UpdatePatient (int id, PatientUpdateDto patientUpdateDto){
+            var update = await apicontext.Patients.FindAsync(id);
             if(update == null)
             {
                 return null;
@@ -49,13 +50,13 @@ namespace Hospital_Management.Services
 
             }
 
-
-            patient.Patient_name = update.Patient_name;
-            patient.Patient_description=update.Patient_description;
-            patient.patient_phoneNo = update.patient_phoneNo;
+              update.Patient_name = patientUpdateDto.Patient_name;
+            update.Patient_description=patientUpdateDto.Patient_Description;
+           update.patient_phoneNo= patientUpdateDto.Patient_phoneNo;
+            update.Email = patientUpdateDto.Patient_email;
            
             await apicontext.SaveChangesAsync();
-            return patient;
+            return update;
         }
 
 
@@ -87,30 +88,26 @@ namespace Hospital_Management.Services
             
         
         }
-        public async Task<bool> PartialUpdate(Patient updatepatient) {
-            var existing = await apicontext.Patients.FindAsync(updatepatient.Patient_id);
-            if(existing== null)
-            {
+        public async Task<bool> PartialUpdate(int id, PatientPartialUpdateDto updatepatient)
+        {
+            var existing = await apicontext.Patients.FindAsync(id);
+            if (existing == null)
                 return false;
-            }
 
-            if (!string.IsNullOrEmpty(updatepatient.Patient_name))
-            {
+            if (updatepatient.Patient_name != null)
                 existing.Patient_name = updatepatient.Patient_name;
-            }
-            if (!string.IsNullOrEmpty(updatepatient.Patient_description))
-            {
-                existing.Patient_description= updatepatient.Patient_description;
-            }
-            if (!string.IsNullOrEmpty(updatepatient.patient_phoneNo))
-            {
-                existing.patient_phoneNo = updatepatient.patient_phoneNo;
-            }
+
+            if (updatepatient.Patient_description != null)
+                existing.Patient_description = updatepatient.Patient_description;
+
+            if (updatepatient.Patient_phoneNo != null)
+                existing.patient_phoneNo = updatepatient.Patient_phoneNo;
+
             await apicontext.SaveChangesAsync();
             return true;
-
-        
         }
+
+
 
     }
 }

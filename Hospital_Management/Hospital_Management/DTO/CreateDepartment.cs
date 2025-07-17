@@ -3,7 +3,7 @@
     public class CreateDepartment
     {
 
-        public  int Department_id { get; set; }
+    //    public  int Department_id { get; set; }
 
         public string  Department_name { get; set; }
 

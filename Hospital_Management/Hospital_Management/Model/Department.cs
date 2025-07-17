@@ -12,8 +12,8 @@ namespace Hospital_Management.Model
 
 
 
-        public Appointment appointment { get; set; }
-        public ICollection<Doctor> Doctor { get; set; }
+       
+       
 
     }
 }

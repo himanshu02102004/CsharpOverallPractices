@@ -74,41 +74,35 @@ namespace Hospital_Management.Controllers
 
         [HttpPut("Updatebyid")]
 
-        public async Task<IActionResult> PatientUpdate(int id, Patient patient)
+        public async Task<IActionResult> PatientUpdate(int id,[FromBody] PatientUpdateDto patientUpdateDto)
         {
+            var updatepatiented = await _patientServices.UpdatePatient(id, patientUpdateDto);
+            if(updatepatiented == null)
+            {
+                return NotFound(new { message = " patient is not found" });
+            }
+            return Ok(new
+            {
+                message = "patient updated succesfuly",
+                data=updatepatiented /// 
 
-            if( id != patient.Patient_id) return BadRequest( "patient ID is mismatched ");
-
-            var existing= await _context.Patients.FindAsync(id);
-            if (existing == null) return NotFound();
-
-            // update properties
-
-            existing.Patient_name = patient.Patient_name;
-            existing.Patient_description=patient.Patient_description;
-            existing.patient_phoneNo=patient.patient_phoneNo;
-            existing.Email = patient.Email;
-
-            await _context.SaveChangesAsync();
-            return Ok("update succesfully");
-
+            }); 
 
 
            
         }
 
 
-        [HttpPatch("Partialupdate")]
+        [HttpPatch("Partialupdate/{id}")]
 
-         public async Task<IActionResult> partialupdate(int id, Patient patient)
+         public async Task<IActionResult> partialupdate(int id, [FromBody] PatientPartialUpdateDto patientPartialUpdateDto)
         {
-            if (id != patient.Patient_id) return BadRequest("ID GET MISSMATCHED");
+            var result = await _patientServices.PartialUpdate(id, patientPartialUpdateDto);
+            if (!result)
+                return Ok(new { message = "patient is not found" });
+            return Ok(new { message = "patient partially updated succesffully" });
 
-            var partialupdate = await _patientServices.PartialUpdate(patient);
-            if(!partialupdate) return NotFound();
-            return NoContent();
 
-           
 
         }
 
