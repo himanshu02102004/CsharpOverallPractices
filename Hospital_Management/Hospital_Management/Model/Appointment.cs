@@ -7,6 +7,7 @@ namespace Hospital_Management.Model
         [Key]
         public int Appoitment_Id { get; set; }
         public int Patient_id { get; set; }
+       
 
         public int Doctor_Id { get; set; }
 

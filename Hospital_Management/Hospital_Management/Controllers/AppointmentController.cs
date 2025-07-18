@@ -3,7 +3,9 @@ using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MimeKit.Tnef;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hospital_Management.Controllers
 {
@@ -13,10 +15,12 @@ namespace Hospital_Management.Controllers
     public class AppointmentController: ControllerBase
     {
         private readonly IAppointmentServices _appointmentServices;
+        private readonly Apicontext _apicontext;
 
-        public AppointmentController( IAppointmentServices appointmentServices)
+        public AppointmentController( IAppointmentServices appointmentServices, Apicontext apicontext)
         {
              _appointmentServices = appointmentServices;
+            _apicontext = apicontext;
         }
 
 
@@ -30,6 +34,7 @@ namespace Hospital_Management.Controllers
                 Doctor_Id=dto.doctor_ID,
               Patient_id =dto.Patient_ID,
                Appointment_Date=dto.dateTime,
+             
               status="Scheduled"
             };
             var bookappoint= await _appointmentServices.BookAppointment(appoint);
@@ -37,16 +42,18 @@ namespace Hospital_Management.Controllers
             return Ok(bookappoint);
         }
 
-        [HttpPatch("{id}/ cancel")]
+
+
+        [HttpPatch("cancel")]
 
         public async Task<IActionResult> cancelappointment(int id)
         {
             var result= await _appointmentServices.CancelAppointmeAsync(id);
-            if (!result) return BadRequest("not available appointment ");
-            return Ok(result);
+            if (!result) return BadRequest("not available appointment or Appointment get cancel ");
+            return Ok("successfully cancel appointment");
         }
 
-        [HttpPatch("{id}/resheduled")]
+        [HttpPatch("resheduled")]
         public async Task<IActionResult> resheduled(int id, DateTime dateTime)
         {
            
@@ -58,17 +65,19 @@ namespace Hospital_Management.Controllers
 
         }
 
-        [HttpGet("doctor/{doctorID}")]
+        [HttpGet("doctor-schedule")]
 
-        public async Task<IActionResult> getdoctorschedule( int doc_id,DateTime dateTime)
+        public async Task<IActionResult> getdoctorschedule( int doc_id, DateTime date)
         {
 
-            var schedule= await _appointmentServices.GetDoctorSchedule(doc_id, dateTime);
+            var Doccexist = await _apicontext.doctors.AnyAsync(a => a.Doctor_Id == doc_id);
+            if (!Doccexist) return  NotFound("doctor is not found");
+            var schedule= await _appointmentServices.GetDoctorSchedule(doc_id,  date);
             return Ok(schedule);
         }
 
 
-        [HttpGet("doctor/{doctorid}/available-slot")]
+        [HttpGet("available-slot")]
 
         public async Task<IActionResult> GetAvailableslot(int doctorid, DateTime date)
         {

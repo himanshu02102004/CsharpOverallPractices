@@ -2,7 +2,9 @@
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Services
@@ -48,82 +50,62 @@ namespace Hospital_Management.Services
         }
 
 
-        public async Task<Appointment> ? BookAppointment(Appointment appointment)
+      
+
+        public async Task<Appointment?> BookAppointment(Appointment appointment)
         {
+            var doc = await _apiconext.doctors.FindAsync(appointment.Doctor_Id);
+            if (doc == null || doc.IsonLeave) return null;
 
-            /// doctor availabe check
-            var docavail = await _apiconext.doctors.FindAsync(appointment.Doctor_Id);
-            if (docavail == null || docavail.IsonLeave) return null;
+         
+            var slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, appointment.Appointment_Date.Date);
 
-
-          var slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, appointment.Appointment_Date.Date);
             if (slots.Count == 0)
-
             {
-                // No slots left today — check tomorrow
-                DateTime nextday = appointment.Appointment_Date.AddDays(1);
-                slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, nextday);
+                
+                DateTime nextDay = appointment.Appointment_Date.AddDays(1);
+                slots = await GetAvailablesLotsAsync(appointment.Doctor_Id, nextDay);
+
                 if (slots.Count == 0)
-                    return null;  // No slot tomorrow either
-                appointment.Appointment_Date = slots.First(); // book first slot tomorrow
+                    return null;
 
+                appointment.Appointment_Date = slots.First(); 
             }
-
             else
-            {     // if requested time not available, assign first available
-                if (!slots.Contains(appointment.Appointment_Date))
-
-                    appointment.Appointment_Date = slots.First();
-
-
+            {
+                // Assign first available TODAY
+                appointment.Appointment_Date = slots.First();
             }
 
-            appointment.status = " Scheduled";
+            appointment.status = "Scheduled";
 
             _apiconext.appointments.Add(appointment);
-            await _apiconext.SaveChangesAsync();
+            await _apiconext.SaveChangesAsync(); 
 
-
-
-
-
+            // Log booking
             var currentUser = _httpContextAccessor.HttpContext?.User.Identity?.Name ?? "Unknown User";
-
             var currentRole = _httpContextAccessor.HttpContext?.User.Claims
-                            .FirstOrDefault(c => c.Type == "Role")?.Value ?? "Unknown Role";
+                .FirstOrDefault(c => c.Type == "Role")?.Value ?? "Unknown Role";
 
+            await LogActionAsync("Book Appointment", currentRole,
+                $"Booked appointment for patient {appointment.Patient_id} with doctor {appointment.Doctor_Id} at {appointment.Appointment_Date} by {currentUser}");
 
-            // Log action
-            await LogActionAsync("Book Appointment ", currentRole, $" Booked  appointment for patient " +
-                $" {appointment.Patient_id} with doctor {appointment.Doctor_Id} at {appointment.Appointment_Date} by {currentUser}");
-
-
-            var patients = await _apiconext.Patients.FindAsync(appointment.Patient_id);
+            // Email
+            var patient = await _apiconext.Patients.FindAsync(appointment.Patient_id);
             var doctor1 = await _apiconext.doctors.FindAsync(appointment.Doctor_Id);
 
-
-
-
-
-
-            // prepare email data
-            string patientemail = patients.Email;
-            string doctorname = doctor1.Doctor_Name;
-
-
-            // SEND EMAIL CONFIRMATON 
-            await _emailservices.SendEmailAsync(patientemail, 
-                "Appointment Confirmation " ,
-                $"your appoitment is confirmed with doctor {doctor1.Doctor_Name} at {appointment.Appointment_Date} ");
+            await _emailservices.SendEmailAsync(
+                patient.Email,
+                "Appointment Confirmation",
+                $"Your appointment is confirmed with Dr. {doctor1.Doctor_Name} at {appointment.Appointment_Date}.\n" +
+                $"Reason :{patient.Patient_description?? "No reason is provided"}");
 
 
 
 
             return appointment;
-
-
-
         }
+
 
 
 
@@ -132,10 +114,11 @@ namespace Hospital_Management.Services
         {
             var appoint = await _apiconext.appointments.FindAsync(id);
             if (appoint == null) return false;
+            if (appoint.status == "Cancelled") return false;
             appoint.status = "Cancelled";
             _apiconext.appointments.Update(appoint);
             var result = await _apiconext.SaveChangesAsync();
-            return result > 0;
+            return true;
         }
 
 
@@ -144,6 +127,7 @@ namespace Hospital_Management.Services
         {
             var appoint = await _apiconext.appointments.FindAsync(id);
             if (appoint == null) return false;
+            if(appoint.status =="Cancelled") return false;
             appoint.Appointment_Date = newdatetime;
             appoint.status = "Reshedule";
             _apiconext.appointments.Update(appoint);
@@ -164,17 +148,18 @@ namespace Hospital_Management.Services
                   .ToListAsync();
 
         }
-        public async Task<IEnumerable<Appointment>> GetDoctorSchedule(int doctor_id, DateTime date)
+        public async Task<IEnumerable<Appointment>> GetDoctorSchedule([FromQuery] int doctor_id, [FromQuery] DateTime date)
         {
-            // Similar to GetAppointmentsByDoctorAndDateAsync, but can include all statuses or more filters
+           
             return await _apiconext.appointments
-                .Where(a => a.Doctor_Id == doctor_id && a.Appointment_Date == date.Date)
+               
+                .Where(a => a.Doctor_Id == doctor_id && a.Appointment_Date.Day == date.Day)
                 .Include(a => a.patient)
                 .ToListAsync();
 
         }
 
-        public async Task<List<DateTime>> GetAvailablesLotsAsync(int doctor_id, DateTime date)
+        public async Task<List<DateTime>> GetAvailablesLotsAsync([FromQuery] int doctor_id,[FromQuery] DateTime date)
         {
             var doctor = await _apiconext.doctors.FindAsync(doctor_id);
             if (doctor == null || doctor.IsonLeave)
@@ -182,7 +167,7 @@ namespace Hospital_Management.Services
 
             // dEFINE WORKING HOUR
             DateTime starttime = date.Date.AddHours(8);
-            DateTime endtime = date.Date.AddHours(18);
+            DateTime endtime = date.Date.AddHours(17);
             DateTime breakstart = date.Date.AddHours(13);
             DateTime breakend = date.Date.AddHours(14);
 

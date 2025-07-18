@@ -1,4 +1,5 @@
 using Hospital_Management.Database;
+using Hospital_Management.Model;
 using Hospital_Management.Services;
 using Hospital_Management.Services.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,11 @@ builder.Services.AddScoped<IAppointmentServices, AppointmentServices>();
 builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
 builder.Services.AddScoped<IDoctorService,DoctorServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
+builder.Services.AddScoped<IMedicalRecordServices,MedicalrecordServices>();
+
 builder.Services.AddScoped<IEmailServices, EmailServices>();
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
+
 builder.Services.AddHttpContextAccessor();
 
 
