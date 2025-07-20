@@ -12,11 +12,11 @@ namespace Hospital_Management.Model
         {
             if(!apicontext.Users.Any(u => u.Role == "Admin"))
             {
-                var admin = new User
+                var admin = new UserApplication
                 {
-                    User_Name = "admin",
-                    User_Password=BCrypt.Net.BCrypt.HashPassword("admin@123"),
-                    Role= "admin"
+                    Username = "admin",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),  // use a strong default password
+                    Role = "Admin"
                 }; 
 
                 apicontext.Users.Add(admin);

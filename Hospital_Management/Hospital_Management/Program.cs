@@ -2,7 +2,11 @@ using Hospital_Management.Database;
 using Hospital_Management.Model;
 using Hospital_Management.Services;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,27 @@ builder.Services.AddScoped<IMedicalRecordServices,MedicalrecordServices>();
 
 builder.Services.AddScoped<IEmailServices, EmailServices>();
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
+
+var key = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(key))
+{
+    throw new Exception("JWT Key is not configured in appsettings.json");
+}
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddHttpContextAccessor();
 
