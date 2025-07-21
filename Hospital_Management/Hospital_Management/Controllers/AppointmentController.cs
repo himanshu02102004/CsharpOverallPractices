@@ -2,6 +2,7 @@
 using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit.Tnef;
@@ -12,6 +13,8 @@ namespace Hospital_Management.Controllers
 
     [ApiController]
     [Route("api/controller")]
+    //[Authorize]
+
     public class AppointmentController: ControllerBase
     {
         private readonly IAppointmentServices _appointmentServices;
@@ -25,6 +28,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPost]
+      //  [Authorize(Roles = "Receptionist,Admin")]
 
         public async Task<IActionResult> bookappointment(BookAppointmentDto dto)
         {
@@ -45,7 +49,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPatch("cancel")]
-
+      //  [Authorize(Roles = "Receptionist,Admin")]
         public async Task<IActionResult> cancelappointment(int id)
         {
             var result= await _appointmentServices.CancelAppointmeAsync(id);
@@ -54,11 +58,12 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpPatch("resheduled")]
-        public async Task<IActionResult> resheduled(int id, DateTime dateTime)
+    //    [Authorize(Roles = "Receptionist,Admin")]
+        public async Task<IActionResult> resheduled(int id, DateTime date)
         {
            
 
-            var appoint= await _appointmentServices.ResheduledAppointment(id, dateTime);
+            var appoint= await _appointmentServices.ResheduledAppointment(id, date);
             if (!appoint) return NotFound("apointment is not found");
             return Ok("Appointment resheduled");
 
@@ -66,6 +71,7 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpGet("doctor-schedule")]
+        [Authorize(Roles = "Receptionist,Admin,Doctor")]
 
         public async Task<IActionResult> getdoctorschedule( int doc_id, DateTime date)
         {

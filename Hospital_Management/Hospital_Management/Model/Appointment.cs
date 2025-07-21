@@ -16,11 +16,6 @@ namespace Hospital_Management.Model
         public DateTime Appointment_Date { get; set; }
         public string  status { get; set; }
 
-
-
-        
-
-     
         public Patient patient { get; set; }
 
         public Doctor Doctor { get; set; }

@@ -3,6 +3,7 @@ using Hospital_Management.Database;
 using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 
@@ -73,7 +74,7 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpPut("Updatebyid")]
-
+        [Authorize(Roles = "Receptionist,Admin")]
         public async Task<IActionResult> PatientUpdate(int id,[FromBody] PatientUpdateDto patientUpdateDto)
         {
             var updatepatiented = await _patientServices.UpdatePatient(id, patientUpdateDto);
@@ -94,8 +95,8 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPatch("Partialupdate/{id}")]
-
-         public async Task<IActionResult> partialupdate(int id, [FromBody] PatientPartialUpdateDto patientPartialUpdateDto)
+        [Authorize(Roles = "Receptionist,Admin")]
+        public async Task<IActionResult> partialupdate(int id, [FromBody] PatientPartialUpdateDto patientPartialUpdateDto)
         {
             var result = await _patientServices.PartialUpdate(id, patientPartialUpdateDto);
             if (!result)
@@ -107,7 +108,7 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpGet("Search")]
-
+        [Authorize(Roles = "Receptionist,Admin")]
         public async Task<IActionResult> SearchPatient(string query)
         {
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Hospital_Management.Services
 {
     public class AppointmentServices : IAppointmentServices 
@@ -96,7 +97,7 @@ namespace Hospital_Management.Services
 
             await _emailservices.SendEmailAsync(
                 patient.Email,
-                "Appointment Confirmation",
+                " Appointment Confirmation ",
                 $"Your appointment is confirmed with Dr. {doctor1.Doctor_Name} at {appointment.Appointment_Date}.\n" +
                 $"Reason :{patient.Patient_description?? "No reason is provided"}");
 
@@ -112,10 +113,23 @@ namespace Hospital_Management.Services
 
         public async Task<bool> CancelAppointmeAsync(int id)
         {
-            var appoint = await _apiconext.appointments.FindAsync(id);
+
+            var appoint = await _apiconext.appointments
+              .Include(a => a.patient)
+              .Include(a => a.Doctor)
+             .FirstOrDefaultAsync(a => a.Appoitment_Id == id);
             if (appoint == null) return false;
             if (appoint.status == "Cancelled") return false;
             appoint.status = "Cancelled";
+
+            if (appoint.status == "Cancelled")
+            {
+                await _emailservices.SendEmailAsync(
+                    appoint.patient.Email,
+                    "  Appointment Cancelled ",
+                    $"Your appointment is Cancelled with Dr. {appoint.Doctor.Doctor_Name} on {appoint.Appointment_Date:dd MMM yyyy}."
+                );
+            }
             _apiconext.appointments.Update(appoint);
             var result = await _apiconext.SaveChangesAsync();
             return true;
@@ -123,15 +137,29 @@ namespace Hospital_Management.Services
 
 
 
-        public async Task<bool> ResheduledAppointment(int id, DateTime newdatetime)
+        public async Task<bool> ResheduledAppointment(int id,DateTime  newdate)
         {
-            var appoint = await _apiconext.appointments.FindAsync(id);
-            if (appoint == null) return false;
-            if(appoint.status =="Cancelled") return false;
-            appoint.Appointment_Date = newdatetime;
-            appoint.status = "Reshedule";
-            _apiconext.appointments.Update(appoint);
+            var appoint = await _apiconext.appointments
+              .Include(a => a.patient)
+              .Include(a => a.Doctor)
+             .FirstOrDefaultAsync(a => a.Appoitment_Id == id);
 
+            if (appoint == null || appoint.status == "Cancelled")
+                return false;
+
+            appoint.Appointment_Date = newdate.Date;
+            appoint.status = "Reshedule";
+
+            if (appoint.status == "Reshedule")
+            {
+                await _emailservices.SendEmailAsync(
+                    appoint.patient.Email,
+                    " Appointment Rescheduled ",
+                    $"Your appointment is rescheduled with Dr. {appoint.Doctor.Doctor_Name} on {appoint.Appointment_Date:dd MMM yyyy}."
+                );
+            }
+
+            _apiconext.appointments.Update(appoint);
             var result = await _apiconext.SaveChangesAsync();
             return result > 0;
         }
