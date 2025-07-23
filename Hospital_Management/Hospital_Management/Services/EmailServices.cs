@@ -20,7 +20,7 @@
             public async Task SendEmailAsync(string toEmail, string subject, string body)
             {
                 if (string.IsNullOrWhiteSpace(_emailsetting.FromEmail))
-                    throw new ArgumentException("Sender email (FromEmail) is not configured.");
+                    throw new ArgumentException("Sender email (FromEmail) iss not configured.");
 
                 if (string.IsNullOrWhiteSpace(toEmail))
                     throw new ArgumentException("Recipient email (toEmail) cannot be null or empty.");
