@@ -1,3 +1,4 @@
+using Hospital_Management;
 using Hospital_Management.Database;
 using Hospital_Management.Model;
 using Hospital_Management.Services;
@@ -10,6 +11,7 @@ using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 // Add services to the container.
 
@@ -25,38 +27,38 @@ builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email
 builder.Services.AddScoped<IEmailServices, EmailServices>();
 
 
-//builder.Services.AddSwaggerGen(c =>
-//{
-//    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hospital_Management ", Version = "v1" });
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hospital_Management ", Version = "v1" });
 
-//    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-//    {
-//        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' and  token.",
-//        Name = "Authorization",
-//        In = ParameterLocation.Header,
-//        Type = SecuritySchemeType.ApiKey,
-//        Scheme = "Bearer"
-//    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' and  token.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
 
-//    //builder.WebHost.UseUrls("http:0.0.0.0:8080");
-//    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-//    {
-//        {
-//            new OpenApiSecurityScheme
-//            {
-//                Reference = new OpenApiReference
-//                {
-//                    Type = ReferenceType.SecurityScheme,
-//                    Id = "Bearer"
-//                },
-//                Scheme = "Bearer",
-//                Name = "Bearer",
-//                In = ParameterLocation.Header,
-//            },
-//            new List<string>()
-//        }
-//    });
-//});
+    //builder.WebHost.UseUrls("http:0.0.0.0:8080");
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "Bearer",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
+});
 
 
 
@@ -86,12 +88,17 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<Apicontext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbms")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// Seed default admin user
+//Seed default admin user
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<Apicontext>();
@@ -109,6 +116,7 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

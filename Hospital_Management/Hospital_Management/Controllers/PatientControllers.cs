@@ -24,6 +24,12 @@ namespace Hospital_Management.Controllers
             _context = apicontext;
         }
 
+
+
+
+
+
+
         [HttpGet]
 
         public async Task<IActionResult> Patientall()
@@ -123,6 +129,13 @@ namespace Hospital_Management.Controllers
 
 
 
+
+
+        [HttpGet("test-exception")]
+        public IActionResult ThrowError()
+        {
+            throw new Exception("this is test exception");
+        }
 
 
     }

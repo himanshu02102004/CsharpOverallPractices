@@ -1,6 +1,0 @@
-services:
-  hospital_management:
-    image: ${DOCKER_REGISTRY-}hospitalmanagement
-    build:
-      context: .
-      dockerfile: Hospital_Management/Dockerfile

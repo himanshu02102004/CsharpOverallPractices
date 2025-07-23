@@ -7,6 +7,9 @@
     <UserSecretsId>bb01c09a-2cfa-4304-be9e-8279b4dd5585</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+   
+	  
+  
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +28,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+   
     <PackageReference Include="MimeKit" Version="4.13.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
