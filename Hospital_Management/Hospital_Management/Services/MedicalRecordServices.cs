@@ -1,4 +1,5 @@
 ﻿using Hospital_Management.Database;
+using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -32,18 +33,35 @@ namespace Hospital_Management.Services
             return await _apicontext.prescriptions
                     .Include(r => r.Patient)
                     .Include(r => r.doctor)
-                    .FirstOrDefaultAsync(r => r.Patient_id==id);
+                    .FirstOrDefaultAsync(r => r.ID==id);
         }
 
 
 
 
 
-        public async Task<MedicalRecord> AddAsync(MedicalRecord prescription)
+        public async Task<MedicalRecord> AddAsync(MedicalRecordDto dto)
         {
-             _apicontext.AddAsync(prescription);
-            await _apicontext.SaveChangesAsync();
-            return prescription;
+
+            var entity = new MedicalRecord
+            {
+                Patient_id = dto.Patient_id,
+                Doctor_Id = dto.Doctor_Id,
+                Notes = dto.Notes,
+                FollowUpdate = dto.FollowUpdate,
+                prescribe = dto.prescribe
+            };
+
+
+
+            _apicontext.AddAsync(entity);
+                await _apicontext.SaveChangesAsync();
+
+            var result = await _apicontext.prescriptions
+                .Include(m => m.doctor)
+                .Include(m => m.Patient)
+                .FirstOrDefaultAsync(m => m.ID == entity.ID);
+                return result!;
 
 
 
@@ -52,7 +70,8 @@ namespace Hospital_Management.Services
         public async Task<IEnumerable<MedicalRecord>> GetbyPatientid(int PatientId)
         {
             return await _apicontext.prescriptions
-                    .Include(r => r.Patient_id == PatientId)
+                     .Where(r=>r.Patient_id ==PatientId)
+                    .Include(r => r.Patient)
                     .Include(r => r.doctor)
                     .ToListAsync();
         }

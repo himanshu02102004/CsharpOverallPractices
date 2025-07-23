@@ -1,6 +1,7 @@
 ﻿
 using Hospital_Management.Model;
 
+
 namespace Hospital_Management.Services.IServices
 {
     public interface IAppointmentServices
@@ -10,7 +11,7 @@ namespace Hospital_Management.Services.IServices
         public Task<Appointment> GetAppointmentbyID(int id);
         public Task<Appointment> BookAppointment(Appointment appointment);
         public Task<bool> CancelAppointmeAsync(int id);
-        public Task<bool> ResheduledAppointment(int id, DateTime newdatetime);
+        public Task<bool> ResheduledAppointment(int id, DateTime newdate);
         
         // Doctor role 
         public Task<IEnumerable<Appointment>> GetAppointmentbyDoctorandDate(int doctor_id,  DateTime date);

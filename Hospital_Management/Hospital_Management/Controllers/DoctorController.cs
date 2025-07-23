@@ -3,6 +3,7 @@ using Hospital_Management.Model;
 using Hospital_Management.Models;
 using Hospital_Management.Services;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -106,6 +107,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPut("id")]
+        [Authorize(Roles = "Admin,Doctor")]
         public async Task<IActionResult> Update(int id, Doctor doctor )
         {
             if (id != doctor.Doctor_Id) return BadRequest("Not found doctor");
@@ -139,7 +141,16 @@ namespace Hospital_Management.Controllers
             return Ok("partial update successfully");
            
         }
-       
+
+        [HttpPatch("{id}/leave")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MarkOnLeave(int id, [FromQuery] bool isOnLeave)
+        {
+            var result = await _doctorService.Markonleave(id, isOnLeave);
+            if (!result) return NotFound();
+            return NoContent();
+        }
+
 
 
 

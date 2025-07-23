@@ -1,6 +1,7 @@
 ﻿using Hospital_Management.DTO;
 using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Management.Controllers
@@ -37,6 +38,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPost("create department")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> create(CreateDepartment depart)
         {
             var creat = await _departmentServices.CreateDepartment(depart);
@@ -49,6 +51,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPut("id")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> update(int id, [FromBody] UpdateDepartmentDTO depart)
         {
          
@@ -59,6 +62,7 @@ namespace Hospital_Management.Controllers
 
 
         [HttpDelete("id")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var delete = await _departmentServices.DeleteDepartment(id);

@@ -1,4 +1,5 @@
-﻿using Hospital_Management.Model;
+﻿using Hospital_Management.DTO;
+using Hospital_Management.Model;
 
 namespace Hospital_Management.Services.IServices
 {
@@ -10,7 +11,7 @@ namespace Hospital_Management.Services.IServices
 
         Task<IEnumerable<MedicalRecord>> GetbyPatientid(int PatientId);// FILTERED LIST
 
-        Task<MedicalRecord> AddAsync(MedicalRecord prescription);
+        Task<MedicalRecord> AddAsync(MedicalRecordDto dto);
 
     }
 }

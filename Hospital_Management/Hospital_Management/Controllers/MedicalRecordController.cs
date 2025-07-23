@@ -1,5 +1,7 @@
-﻿using Hospital_Management.Model;
+﻿using Hospital_Management.DTO;
+using Hospital_Management.Model;
 using Hospital_Management.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Management.Controllers
@@ -18,7 +20,8 @@ namespace Hospital_Management.Controllers
             medicalrecordservices = _medicalrecordservices;
         }
 
-        [HttpGet]
+        [HttpGet]      
+        [Authorize(Roles = "Admin,Receptionist,Doctor")]
         public async Task<IActionResult> GetAll()
         {
             var record = await medicalrecordservices.GetPrescriptionListAsync();
@@ -28,7 +31,8 @@ namespace Hospital_Management.Controllers
         }
 
 
-        [HttpGet("id")]
+        [HttpGet("prescription-id")]      
+        [Authorize(Roles = "Admin,Receptionist,Doctor")]
         public async Task<IActionResult> GetbyPrescriptionid(int id)
         {
             var record= await medicalrecordservices.GetPrescriptionByIdAsync(id);
@@ -40,6 +44,7 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpGet("patient-id")]
+        [Authorize(Roles = "Admin,Receptionist,Doctor")]
         public async Task<IActionResult> GetbyPatientid( int patientid)
         {
 
@@ -49,9 +54,14 @@ namespace Hospital_Management.Controllers
 
         }
         [HttpPost("add")]
-        public async Task<IActionResult> Add( MedicalRecord prescription)
+        [Authorize(Roles = "Doctor,Admin")]
+        public async Task<IActionResult> Add( MedicalRecordDto record)
         {
-          var aded= await medicalrecordservices.AddAsync(prescription);
+
+          
+
+
+          var aded= await medicalrecordservices.AddAsync(record);
             return CreatedAtAction(nameof(GetbyPrescriptionid), new { id = aded.ID}, aded);
           
         }
